@@ -1,0 +1,47 @@
+# Python 环境与缓存
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# 测试、覆盖率与静态检查缓存
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Python 打包产物
+build/
+dist/
+*.egg-info/
+
+# 本地环境变量
+.env
+.env.*
+!.env.example
+
+# 本地开发工具
+.idea/
+.vscode/
+*.swp
+*.swo
+.history/
+.DS_Store
+
+# Office 编辑时产生的临时锁文件
+~$*.docx
+~$*.docm
+
+# 生成与验收产物
+input/
+output/
