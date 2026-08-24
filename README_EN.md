@@ -1,9 +1,3 @@
-<p align="center"><a href="README.md">中文</a> | English</p>
-
-<div align="center">
-  <img src="assets/json-resume-hero.png" width="960" alt="An abstract illustration of structured JSON becoming a professional resume" />
-</div>
-
 <h1 align="center">📄 JSON-Resume</h1>
 
 <p align="center"><strong>Prepare JSON. Generate your resume.</strong></p>
@@ -23,6 +17,7 @@
   <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white" alt="Python 3.11" />
   <img src="https://img.shields.io/badge/output-DOCX%20%2B%20PDF-2B579A" alt="DOCX and PDF output" />
   <a href="SKILL.md"><img src="https://img.shields.io/badge/AI%20Agent-Skill-6E56CF" alt="AI Agent Skill" /></a>
+  <a href="https://github.com/Eric-Zhou-0302/Offer-Rain" title="Open Offer-Rain"><img src="https://img.shields.io/badge/Workflow-JSON--Resume%20%C3%97%20Offer--Rain-6E56CF" alt="JSON-Resume × Offer-Rain workflow" /></a>
 </p>
 
 <p align="center">
@@ -33,6 +28,12 @@
   <a href="#workflow">Workflow</a> ·
   <a href="#license">License</a>
 </p>
+
+<p align="center"><a href="README.md">中文</a> | English</p>
+
+<div align="center">
+  <img src="assets/json-resume-hero.png" width="480" alt="An abstract illustration of structured JSON becoming a professional resume" />
+</div>
 
 ---
 
@@ -190,6 +191,10 @@ flowchart TD
     L --> M[Preserve content and order]
     M --> H
 ```
+
+## Pair with Offer-Rain
+
+JSON-Resume focuses on creating resumes, not sending applications. If you need to apply by email, use [Offer-Rain](https://github.com/Eric-Zhou-0302/Offer-Rain).
 
 ## License
 

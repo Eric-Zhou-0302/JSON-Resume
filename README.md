@@ -1,9 +1,3 @@
-<p align="center">中文 | <a href="README_EN.md">English</a></p>
-
-<div align="center">
-  <img src="assets/json-resume-hero.png" width="960" alt="结构化 JSON 生成职业简历的抽象插画" />
-</div>
-
 <h1 align="center">📄 JSON-Resume</h1>
 
 <p align="center"><strong>准备 JSON，生成你的简历。</strong></p>
@@ -23,6 +17,7 @@
   <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white" alt="Python 3.11" />
   <img src="https://img.shields.io/badge/output-DOCX%20%2B%20PDF-2B579A" alt="DOCX and PDF output" />
   <a href="SKILL.md"><img src="https://img.shields.io/badge/AI%20Agent-Skill-6E56CF" alt="AI Agent Skill" /></a>
+  <a href="https://github.com/Eric-Zhou-0302/Offer-Rain" title="打开 Offer-Rain"><img src="https://img.shields.io/badge/Workflow-JSON--Resume%20%C3%97%20Offer--Rain-6E56CF" alt="JSON-Resume × Offer-Rain 工作流" /></a>
 </p>
 
 
@@ -34,6 +29,12 @@
   <a href="#工作流">工作流</a> ·
   <a href="#协议">协议</a>
 </p>
+
+<p align="center">中文 | <a href="README_EN.md">English</a></p>
+
+<div align="center">
+  <img src="assets/json-resume-hero.png" width="480" alt="结构化 JSON 生成职业简历的抽象插画" />
+</div>
 
 ---
 
@@ -191,6 +192,10 @@ flowchart TD
     L --> M[保持原文与顺序]
     M --> H
 ```
+
+## 搭配 Offer-Rain
+
+JSON-Resume 专注于制作简历，不负责投递。若你需要以邮箱方式投递你的简历，可使用 [Offer-Rain](https://github.com/Eric-Zhou-0302/Offer-Rain)。
 
 ## 协议
 
