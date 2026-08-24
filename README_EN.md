@@ -23,10 +23,10 @@
 <p align="center">
   <a href="#resume-style">Resume style</a> ·
   <a href="#how-to-use">How to use</a> ·
-  <a href="#agent-delivery-standard">Agent delivery standard</a> ·
   <a href="#project-structure">Project structure</a> ·
   <a href="#workflow">Workflow</a> ·
-  <a href="#license">License</a>
+  <a href="#license">License</a> ·
+  <a href="#pair-with-offer-rain">Pair with Offer-Rain</a>
 </p>
 
 <p align="center"><a href="README.md">中文</a> | English</p>
@@ -90,6 +90,16 @@ Maintain a complete personal Career Source in Markdown or plain text: education,
 
 For each application, give the target job description to the Agent. It will use only the facts in the Career Source, foregrounding your most relevant strengths to create the best-fitting resume for that role.
 
+### Agent delivery standard
+
+The Skill does more than put text into Word. It owns the complete delivery path from factual material to the final resume and follows these standards:
+
+- **One-page completion:** In professional authoring mode, the Agent selects and refines content for the target role, producing a naturally dense resume of exactly one page. If content is excessive, it removes weaker or repetitive information first; if content is thin, it only adds facts from authorized source materials.
+- **Full acceptance:** The Agent must generate the DOCX and PDF through the project CLI, check the actual PDF page count, and inspect every page for clipping, overlap, table alignment, line breaks, characters, and whitespace. Creating files alone is not completion.
+- **Factual boundary:** The Agent uses only materials you provide or explicitly authorize: Career Sources, prior resumes, and project records. It does not invent experience, dates, titles, grades, metrics, skills, or contact details. A JD may guide selection and wording, but is never evidence of personal facts.
+- **Faithful-rendering exception:** If you provide JSON directly, the Agent preserves its content and order without deleting or rewriting it. This mode may produce multiple pages, but the Agent reports the actual page count and layout condition honestly.
+- **File protection:** Without explicit authorization, the Agent does not overwrite existing JSON, DOCX, or PDF files.
+
 ## CLI
 
 ### Install
@@ -133,17 +143,7 @@ python main.py resume.json --quiet            # Print artifact paths only; suita
 python main.py resume.json --no-banner        # Hide the interactive terminal logo
 ```
 
-## Agent delivery standard
-
-The Skill does more than put text into Word. It owns the complete delivery path from factual material to the final resume and follows these standards:
-
-- **One-page completion:** In professional authoring mode, the Agent selects and refines content for the target role, producing a naturally dense resume of exactly one page. If content is excessive, it removes weaker or repetitive information first; if content is thin, it only adds facts from authorized source materials.
-- **Full acceptance:** The Agent must generate the DOCX and PDF through the project CLI, check the actual PDF page count, and inspect every page for clipping, overlap, table alignment, line breaks, characters, and whitespace. Creating files alone is not completion.
-- **Factual boundary:** The Agent uses only materials you provide or explicitly authorize: Career Sources, prior resumes, and project records. It does not invent experience, dates, titles, grades, metrics, skills, or contact details. A JD may guide selection and wording, but is never evidence of personal facts.
-- **Faithful-rendering exception:** If you provide JSON directly, the Agent preserves its content and order without deleting or rewriting it. This mode may produce multiple pages, but the Agent reports the actual page count and layout condition honestly.
-- **File protection:** Without explicit authorization, the Agent does not overwrite existing JSON, DOCX, or PDF files.
-
-## Project structure
+# Project structure
 
 ```text
 JSON-Resume/
@@ -173,7 +173,7 @@ JSON-Resume/
 └── tests/                             # Tests
 ```
 
-## Workflow
+# Workflow
 
 ```mermaid
 flowchart TD
@@ -192,17 +192,17 @@ flowchart TD
     M --> H
 ```
 
-## Pair with Offer-Rain
+# Pair with Offer-Rain
 
 JSON-Resume focuses on creating resumes, not sending applications. If you need to apply by email, use [Offer-Rain](https://github.com/Eric-Zhou-0302/Offer-Rain).
 
-## License
+# License
 
 [MIT](./LICENSE) @ 2026 Eric Zhou
 
 ---
 
-## Buy the author a coffee
+# Buy the author a coffee
 
 <div align="center">
   <p>
