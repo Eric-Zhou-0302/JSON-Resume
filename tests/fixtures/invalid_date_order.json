@@ -1,0 +1,29 @@
+{
+  "locale": "zh-CN",
+  "basics": {
+    "name": "测试用户",
+    "contacts": [
+      {
+        "label": "test@example.com",
+        "href": "mailto:test@example.com"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "experience",
+      "entries": [
+        {
+          "title": "示例公司",
+          "position": "分析师",
+          "location": "北京",
+          "start_date": "2025-01",
+          "end_date": "2024-12",
+          "bullets": [
+            "用于验证日期先后关系。"
+          ]
+        }
+      ]
+    }
+  ]
+}

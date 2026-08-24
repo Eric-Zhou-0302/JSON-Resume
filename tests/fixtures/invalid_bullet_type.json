@@ -1,0 +1,25 @@
+{
+  "locale": "zh-CN",
+  "basics": {
+    "name": "测试用户",
+    "contacts": [
+      {
+        "label": "test@example.com",
+        "href": "mailto:test@example.com"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "skills",
+      "entries": [
+        {
+          "bullets": [
+            "Python",
+            123
+          ]
+        }
+      ]
+    }
+  ]
+}

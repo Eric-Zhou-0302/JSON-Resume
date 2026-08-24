@@ -1,0 +1,13 @@
+{
+  "locale": "zh-CN",
+  "basics": {
+    "name": "测试用户",
+    "contacts": [
+      {
+        "label": "   ",
+        "href": "mailto:test@example.com"
+      }
+    ]
+  },
+  "sections": []
+}

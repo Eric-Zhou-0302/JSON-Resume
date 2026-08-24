@@ -1,0 +1,61 @@
+{
+  "locale": "zh-CN",
+  "basics": {
+    "name": "王小明",
+    "contacts": [
+      {
+        "label": "xiaoming.wang@example.com",
+        "href": "mailto:xiaoming.wang@example.com"
+      },
+      {
+        "label": "138-0000-0000",
+        "href": "tel:+8613800000000"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "Education",
+      "entries": [
+        {
+          "title": "示例大学",
+          "position": "金融学学士",
+          "location": "成都",
+          "start_date": "2021-09",
+          "end_date": "2025-06",
+          "bullets": [
+            "主修公司金融、投资学与计量经济学。"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Experience",
+      "entries": [
+        {
+          "title": "示例资产管理公司",
+          "position": "研究实习生",
+          "location": "上海",
+          "start_date": "2025-07",
+          "end_date": "至今",
+          "bullets": [
+            "协助整理行业研究资料。",
+            "维护估值模型中的公开市场数据。"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Skills",
+      "entries": [
+        {
+          "bullets": [
+            "Python",
+            "Excel",
+            "SQL"
+          ]
+        }
+      ]
+    }
+  ]
+}

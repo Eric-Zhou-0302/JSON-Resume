@@ -1,0 +1,61 @@
+{
+  "locale": "en-US",
+  "basics": {
+    "name": "Alex Chen",
+    "contacts": [
+      {
+        "label": "alex.chen@example.com",
+        "href": "mailto:alex.chen@example.com"
+      },
+      {
+        "label": "+1 202-555-0147",
+        "href": "tel:+12025550147"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "Education",
+      "entries": [
+        {
+          "title": "Example University",
+          "position": "B.S. in Finance",
+          "location": "Boston, MA",
+          "start_date": "2021-09",
+          "end_date": "2025-06",
+          "bullets": [
+            "Coursework in corporate finance, investments, and econometrics."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Experience",
+      "entries": [
+        {
+          "title": "Example Asset Management",
+          "position": "Research Intern",
+          "location": "New York, NY",
+          "start_date": "2025-07",
+          "end_date": "Present",
+          "bullets": [
+            "Organized public industry research materials.",
+            "Maintained public-market inputs in valuation models."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Skills",
+      "entries": [
+        {
+          "bullets": [
+            "Python",
+            "Excel",
+            "SQL"
+          ]
+        }
+      ]
+    }
+  ]
+}
