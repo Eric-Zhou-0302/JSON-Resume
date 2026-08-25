@@ -135,10 +135,10 @@ Dates must be valid `YYYY-MM` values. `end_date` may also use status text such a
 ### Render the resume
 
 ```bash
-python main.py resume.json                   # Render DOCX; defaults to ./output/resume.docx
-python main.py resume.json -o OUTPUT.docx    # Specify the output path and filename
-python main.py resume.json --pdf             # Also generate a PDF
-python main.py resume.json --force           # Replace an existing file
+python main.py resume.json                    # Render DOCX; defaults to ./output/resume.docx
+python main.py resume.json -o OUTPUT.docx     # Specify the output path and filename
+python main.py resume.json --pdf              # Also generate a PDF
+python main.py resume.json --force            # Replace an existing file
 python main.py resume.json --quiet            # Print artifact paths only; suitable for scripts
 python main.py resume.json --no-banner        # Hide the interactive terminal logo
 ```

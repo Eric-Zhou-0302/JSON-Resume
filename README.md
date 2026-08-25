@@ -136,10 +136,10 @@ pip install -r requirements.txt
 ### 渲染简历
 
 ```bash
-python main.py resume.json                   # 渲染 DOCX，默认输出到 ./output/resume.docx
-python main.py resume.json -o OUTPUT.docx    # 指定输出位置与文件名
-python main.py resume.json --pdf             # 生成 PDF
-python main.py resume.json --force           # 覆盖已有文件
+python main.py resume.json                    # 渲染 DOCX，默认输出到 ./output/resume.docx
+python main.py resume.json -o OUTPUT.docx     # 指定输出位置与文件名
+python main.py resume.json --pdf              # 生成 PDF
+python main.py resume.json --force            # 覆盖已有文件
 python main.py resume.json --quiet            # 仅输出产物路径，适合脚本调用
 python main.py resume.json --no-banner        # 隐藏交互式终端 Logo
 ```
