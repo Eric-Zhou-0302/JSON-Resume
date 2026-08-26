@@ -1,0 +1,131 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  htmlLang: string;
+  /** Override the OG image URL. */
+  ogImage?: string;
+}
+
+const { title, description, htmlLang, ogImage } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = ogImage ?? new URL("/og-default.png", Astro.site).toString();
+const base = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const hreflangZh = `${base}/JSON-Resume/`;
+const hreflangEn = `${base}/JSON-Resume/en/`;
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="alternate" hreflang="zh-CN" href={hreflangZh} />
+    <link rel="alternate" hreflang="en" href={hreflangEn} />
+    <link rel="alternate" hreflang="x-default" href={hreflangZh} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:locale" content={htmlLang.replace("-", "_")} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {/* Theme bootstrap: read stored preference before paint to avoid FOUC. */}
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem("jr-theme");
+          var root = document.documentElement;
+          if (stored === "light" || stored === "dark") {
+            root.setAttribute("data-theme", stored);
+          }
+        } catch (e) {
+          /* localStorage unavailable, fall back to media query. */
+        }
+      })();
+    </script>
+
+    {/* Reveal-on-scroll: toggle .is-visible on .jr-rise elements as they enter
+        the viewport. Elements that are already in view at page load are
+        marked visible immediately so the hero never flashes empty.
+        Deferred to DOMContentLoaded so .jr-rise nodes exist when we look for them. */}
+    <script is:inline>
+      function jrSetupReveal() {
+        var els = document.querySelectorAll(".jr-rise");
+        if (!els.length) return;
+
+        var reduce =
+          window.matchMedia &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (reduce || !("IntersectionObserver" in window)) {
+          els.forEach(function (el) {
+            el.classList.add("is-visible");
+          });
+          return;
+        }
+
+        function reveal(el) {
+          el.classList.add("is-visible");
+        }
+
+        var view = window.innerHeight;
+
+        // First pass: any element already inside the viewport on initial load
+        // is revealed immediately. IO is unreliable for "already visible"
+        // elements across all browsers, so do this check by hand.
+        els.forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.top < view && r.bottom > 0) {
+            reveal(el);
+          }
+        });
+
+        // Second pass: observe the rest.
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                reveal(entry.target);
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0, rootMargin: "0px 0px -8% 0px" }
+        );
+
+        els.forEach(function (el) {
+          if (!el.classList.contains("is-visible")) {
+            io.observe(el);
+          }
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", jrSetupReveal);
+      } else {
+        jrSetupReveal();
+      }
+    </script>
+  </head>
+  <body class="bg-canvas text-ink antialiased">
+    <slot />
+  </body>
+</html>

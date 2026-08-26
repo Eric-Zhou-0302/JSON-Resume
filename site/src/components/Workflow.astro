@@ -1,0 +1,163 @@
+---
+import type { WorkflowCopy } from "../i18n/types";
+
+interface Props {
+  workflow: WorkflowCopy;
+}
+
+const { workflow } = Astro.props;
+const pipeline = workflow.pipeline;
+---
+
+<section id="workflow" class="border-t border-rule bg-surface">
+  <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+    <div class="max-w-[58ch] jr-rise">
+      <h2
+        class="font-display text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold tracking-tight text-ink"
+      >
+        {workflow.heading}
+      </h2>
+      <p class="mt-4 text-[16px] leading-[1.6] text-ink-muted">
+        {workflow.body}
+      </p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-1 gap-5 lg:grid-cols-12">
+      {/* Cell 1: Write (large, 7/12) */}
+      <article
+        class="jr-rise rounded-[var(--radius-card)] border border-rule bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-[2px] hover:border-rule-strong lg:col-span-7"
+      >
+        <h3
+          class="font-display text-[20px] font-semibold tracking-tight text-ink"
+        >
+          {workflow.cells.write.title}
+        </h3>
+        <p class="mt-2 max-w-[44ch] text-[14.5px] leading-[1.55] text-ink-muted">
+          {workflow.cells.write.body}
+        </p>
+        <div
+          class="mt-5 overflow-hidden rounded-[10px] border border-rule bg-canvas"
+        >
+          <pre
+            class="overflow-x-auto px-4 py-3.5 font-mono-tight text-[12px] leading-[1.65] text-ink"
+          ><code>{`{
+  "locale": "zh-CN",
+  "name": { "full": "...", "pinyin": "..." },
+  "contact": { "email": "...", "phone": "..." },
+  "sections": [ ... ]
+}`}</code></pre>
+        </div>
+      </article>
+
+      {/* Cell 2: Validate (small, 5/12) - tinted for visual variation */}
+      <article
+        class="jr-rise rounded-[var(--radius-card)] border border-rule p-6 shadow-card transition-all duration-300 hover:-translate-y-[2px] lg:col-span-5"
+        style="background-color: var(--color-accent-soft); color: var(--color-accent-soft-ink); border-color: transparent;"
+      >
+        <h3
+          class="font-display text-[20px] font-semibold tracking-tight"
+          style="color: var(--color-accent-soft-ink);"
+        >
+          {workflow.cells.validate.title}
+        </h3>
+        <ul class="mt-5 space-y-2.5">
+          {
+            workflow.cells.validate.checks.map((line) => (
+              <li class="flex items-start gap-2.5 text-[13.5px] leading-[1.5]">
+                <span
+                  aria-hidden="true"
+                  class="mt-[7px] inline-block h-1.5 w-1.5 shrink-0 rounded-full"
+                  style="background-color: var(--color-accent);"
+                />
+                <span>{line}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+
+      {/* Cell 3: Render (6/12) */}
+      <article
+        class="jr-rise rounded-[var(--radius-card)] border border-rule bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-[2px] hover:border-rule-strong lg:col-span-6"
+      >
+        <h3
+          class="font-display text-[20px] font-semibold tracking-tight text-ink"
+        >
+          {workflow.cells.render.title}
+        </h3>
+        <p class="mt-2 max-w-[44ch] text-[14.5px] leading-[1.55] text-ink-muted">
+          {workflow.cells.render.body}
+        </p>
+        <div class="mt-5 flex flex-wrap items-center gap-2 font-mono-tight text-[12px]">
+          {
+            pipeline.map((token, i) => (
+              <>
+                <span
+                  class="rounded-[6px] border border-rule px-2 py-1 text-ink"
+                  style={i === 0 || i === pipeline.length - 1 ? "background-color: var(--color-accent); color: var(--color-accent-ink); border-color: transparent;" : ""}
+                >
+                  {token}
+                </span>
+                {i < pipeline.length - 1 && (
+                  <span aria-hidden="true" class="text-ink-faint">
+                    &rarr;
+                  </span>
+                )}
+              </>
+            ))
+          }
+        </div>
+      </article>
+
+      {/* Cell 4: Export (6/12) */}
+      <article
+        class="jr-rise rounded-[var(--radius-card)] border border-rule bg-surface-raised p-6 shadow-card transition-all duration-300 hover:-translate-y-[2px] hover:border-rule-strong lg:col-span-6"
+      >
+        <h3
+          class="font-display text-[20px] font-semibold tracking-tight text-ink"
+        >
+          {workflow.cells.export.title}
+        </h3>
+        <p class="mt-2 max-w-[44ch] text-[14.5px] leading-[1.55] text-ink-muted">
+          {workflow.cells.export.body}
+        </p>
+        <div class="mt-5 space-y-2.5">
+          <div
+            class="flex items-center justify-between rounded-[10px] border border-rule bg-canvas px-3.5 py-2.5"
+          >
+            <div class="flex items-center gap-2.5">
+              <span
+                aria-hidden="true"
+                class="grid h-6 w-6 place-items-center rounded-[6px] font-mono-tight text-[10px] font-semibold"
+                style="background-color: var(--surface); color: var(--ink);"
+              >
+                W
+              </span>
+              <span class="font-mono-tight text-[13px] text-ink">resume.docx</span>
+            </div>
+            <span class="font-mono-tight text-[11.5px] text-ink-faint">
+              {workflow.exportDocxSize}
+            </span>
+          </div>
+          <div
+            class="flex items-center justify-between rounded-[10px] border border-rule bg-canvas px-3.5 py-2.5"
+          >
+            <div class="flex items-center gap-2.5">
+              <span
+                aria-hidden="true"
+                class="grid h-6 w-6 place-items-center rounded-[6px] font-mono-tight text-[10px] font-semibold"
+                style="background-color: var(--surface); color: var(--ink);"
+              >
+                P
+              </span>
+              <span class="font-mono-tight text-[13px] text-ink">resume.pdf</span>
+            </div>
+            <span class="font-mono-tight text-[11.5px] text-ink-faint">
+              {workflow.exportPdfSize}
+            </span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

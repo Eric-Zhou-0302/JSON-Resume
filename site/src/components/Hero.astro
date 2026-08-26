@@ -1,0 +1,124 @@
+---
+import { Image } from "astro:assets";
+import showcaseZh from "../../../assets/example/example_resume_zh.png";
+import showcaseEn from "../../../assets/example/example_resume_en.png";
+import type { HeroCopy } from "../i18n/types";
+
+interface Props {
+  hero: HeroCopy;
+  ctaSecondaryHref?: string;
+}
+
+const { hero, ctaSecondaryHref = "#examples" } = Astro.props;
+const repoHref = "https://github.com/Eric-Zhou-0302/JSON-Resume";
+const previewSrc = hero.previewImage === "zh" ? showcaseZh : showcaseEn;
+---
+
+<section class="relative overflow-hidden">
+  {/* faint radial highlight behind the headline for poster-like glow.
+      gated on prefers-reduced-motion below via @media rule in global.css. */}
+  <div
+    aria-hidden="true"
+    class="jr-hero-glow pointer-events-none absolute inset-0 -z-10"
+  >
+  </div>
+
+  <div
+    class="mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6 lg:px-8 lg:pb-28 lg:pt-20"
+  >
+    <div class="grid grid-cols-1 gap-x-10 gap-y-12 lg:grid-cols-12 lg:items-end">
+      {/* Left: headline + subtext + CTAs (8/12) */}
+      <div class="lg:col-span-8">
+        <div class="jr-rise">
+          <p
+            class="font-mono-tight text-[12px] uppercase tracking-[0.16em] text-ink-faint"
+          >
+            {hero.eyebrow}
+          </p>
+        </div>
+
+        <h1
+          class="jr-rise mt-6 font-display text-[clamp(3rem,8.4vw,6rem)] font-semibold leading-[0.98] tracking-[-0.035em] text-ink whitespace-pre-line"
+        >
+          {hero.headline}
+        </h1>
+
+        <p
+          class="jr-rise mt-7 max-w-[52ch] text-[17px] leading-[1.55] text-ink-muted"
+        >
+          {hero.subtext}
+        </p>
+
+        <div class="jr-rise mt-10 flex flex-wrap items-center gap-3">
+          <a
+            href={repoHref}
+            target="_blank"
+            rel="noopener"
+            class="jr-magnetic inline-flex items-center gap-2 rounded-[var(--radius-control)] px-5 py-3 text-[14px] font-medium"
+            style="background-color: var(--color-accent); color: var(--color-accent-ink);"
+          >
+            {hero.ctaPrimary}
+            <span aria-hidden="true" class="jr-arrow">→</span>
+          </a>
+          <a
+            href={ctaSecondaryHref}
+            class="inline-flex items-center gap-2 rounded-[var(--radius-control)] border border-rule-strong px-5 py-3 text-[14px] font-medium text-ink hover:bg-surface"
+          >
+            {hero.ctaSecondary}
+          </a>
+        </div>
+      </div>
+
+      {/* Right: preview card (4/12). Larger, with subtle parallax via CSS. */}
+      <div class="lg:col-span-4 jr-parallax">
+        <div
+          class="jr-float relative rounded-[var(--radius-card)] border border-rule bg-surface-raised p-3 shadow-card"
+        >
+          <div
+            class="flex items-center justify-between border-b border-rule px-3 pb-2.5 pt-1"
+          >
+            <div class="flex items-center gap-1.5">
+              <span
+                aria-hidden="true"
+                class="h-2.5 w-2.5 rounded-full"
+                style="background-color: var(--rule-strong);"
+              ></span>
+              <span
+                aria-hidden="true"
+                class="h-2.5 w-2.5 rounded-full"
+                style="background-color: var(--rule-strong);"
+              ></span>
+              <span
+                aria-hidden="true"
+                class="h-2.5 w-2.5 rounded-full"
+                style="background-color: var(--rule-strong);"
+              ></span>
+            </div>
+            <span class="font-mono-tight text-[11px] text-ink-faint">
+              {hero.previewImage === "zh" ? "简历预览" : "resume preview"}
+            </span>
+            <span class="w-12"></span>
+          </div>
+
+          <div class="px-1 pt-2 pb-1">
+            <Image
+              src={previewSrc}
+              alt="Rendered resume preview generated from a JSON file"
+              widths={[360, 540, 720]}
+              sizes="(min-width: 1024px) 30vw, 90vw"
+              format="webp"
+              quality={86}
+              loading="eager"
+              decoding="async"
+              class="block h-auto w-full rounded-[8px]"
+            />
+          </div>
+        </div>
+
+        <p class="mt-3 px-1 font-mono-tight text-[11.5px] text-ink-faint">
+          {hero.previewCaption}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

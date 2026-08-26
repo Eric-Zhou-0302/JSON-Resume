@@ -1,0 +1,84 @@
+---
+import { Image } from "astro:assets";
+import showcaseZh from "../../../assets/example/example_resume_zh.png";
+import showcaseEn from "../../../assets/example/example_resume_en.png";
+import type { ShowcaseCopy } from "../i18n/types";
+
+interface Props {
+  showcase: ShowcaseCopy;
+}
+
+const { showcase } = Astro.props;
+const previewSrc = showcase.image === "zh" ? showcaseZh : showcaseEn;
+const examplesBase = import.meta.env.BASE_URL + "examples/";
+const examplePrefix = showcase.image === "zh" ? "zh" : "en";
+---
+
+<section id="examples" class="border-t border-rule">
+  <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+    <div class="max-w-[58ch] jr-rise">
+      <p
+        class="font-mono-tight text-[11.5px] uppercase tracking-[0.18em] text-ink-faint"
+      >
+        {showcase.eyebrow}
+      </p>
+      <h2
+        class="mt-4 font-display text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold tracking-tight text-ink"
+      >
+        {showcase.heading}
+      </h2>
+      <p class="mt-4 text-[16px] leading-[1.6] text-ink-muted">
+        {showcase.body}
+      </p>
+    </div>
+
+    <figure class="mt-12">
+      <div
+        class="overflow-hidden rounded-[var(--radius-card)] border border-rule bg-surface-raised p-3 shadow-card"
+      >
+        <Image
+          src={previewSrc}
+          alt={showcase.altText}
+          widths={[640, 960, 1280, 1600]}
+          sizes="(min-width: 1024px) 960px, 92vw"
+          format="webp"
+          quality={86}
+          loading="lazy"
+          decoding="async"
+          class="block h-auto w-full rounded-[8px]"
+        />
+      </div>
+      <figcaption
+        class="mt-4 flex flex-wrap items-center justify-between gap-3 font-mono-tight text-[12px] text-ink-faint"
+      >
+        <span>{showcase.caption}</span>
+        <div class="flex flex-wrap items-center gap-3">
+          <a
+            href={examplesBase + examplePrefix + ".pdf"}
+            target="_blank"
+            rel="noopener"
+            class="text-ink hover:underline"
+          >
+            PDF
+          </a>
+          <a
+            href={examplesBase + examplePrefix + ".docx"}
+            target="_blank"
+            rel="noopener"
+            class="text-ink hover:underline"
+          >
+            DOCX
+          </a>
+          <a
+            href={examplesBase + examplePrefix + ".json"}
+            target="_blank"
+            rel="noopener"
+            class="text-ink hover:underline"
+          >
+            JSON
+          </a>
+        </div>
+      </figcaption>
+    </figure>
+  </div>
+</section>
