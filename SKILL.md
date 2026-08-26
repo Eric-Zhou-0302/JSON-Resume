@@ -197,10 +197,10 @@ CLI 负责从空白 Word 文档生成 DOCX。交付前应知道并检查以下�
 
 - 纵向页面、四边均为 0.5 英寸；纸张严格按 locale 映射。
 - 文档具有项目自己的 7 个英文段落样式：`Resume Name`、`Resume Contact Information`、`Resume Section Heading`、`Resume Entry Heading`、`Resume Entry Metadata`、`Resume Bullet`、`Resume Sub Bullet`，以及 `Resume Entry Table` 表格样式。
-- 英文字体为 Times New Roman、中文字体为宋体，字体槽位必须显式覆盖 `w:ascii`、`w:hAnsi`、`w:eastAsia`；姓名居中 24 pt 加粗，联系方式居中 10.5 pt，章节标题 14 pt 加粗并带底边线和 Small Caps，一级 Bullet 为 11 pt。
+- 英文字体为 Times New Roman、中文字体为宋体，字体槽位必须显式覆盖 `w:ascii`、`w:hAnsi`、`w:eastAsia`；姓名居中 24 pt 加粗，联系方式居中 10.5 pt，章节标题 14 pt 加粗并带底边线和 Small Caps，一级 Bullet 为 11 pt；非空 `href` 的联系方式为黑色单下划线。
 - 条目头部使用无边框、固定布局、垂直居中的 60/40 双列表格：左栏为 `title | position`，右栏为 `location | 日期范围`。日期范围在两端都有值时以 ` - ` 连接；不得用空格或制表符伪造对齐。
 - bullet 使用真正的 Word 编号/项目符号定义，不能用 Unicode 圆点模拟；空白 bullet 不显示。
-- 联系方式按 ` | ` 分隔；非空 `href` 必须变为显式外部超链接，空 `href` 不得产生链接关系。个人元数据必须清空并稳定化，不能遗留生成环境的作者或修改者信息。
+- 联系方式按 ` | ` 分隔；非空 `href` 必须变为黑色单下划线的显式外部超链接，空 `href` 不得产生链接关系或下划线。个人元数据必须清空并稳定化，不能遗留生成环境的作者或修改者信息。
 
 ## 准备项目环境
 

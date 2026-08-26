@@ -106,7 +106,7 @@ main.py
 | 样式名 | 类型 | 字号与字重 | 对齐与间距 | 其他格式 | 用途 |
 | --- | --- | --- | --- | --- | --- |
 | `Resume Name` | 段落 | 24 pt，加粗 | 居中；段前/段后 0 pt | 无 | 姓名 |
-| `Resume Contact Information` | 段落 | 10.5 pt，常规 | 居中；段前/段后 0 pt | 非空 `href` 为外部超链接 | 联系方式 |
+| `Resume Contact Information` | 段落 | 10.5 pt，常规 | 居中；段前/段后 0 pt | 非空 `href` 为黑色单下划线的外部超链接 | 联系方式 |
 | `Resume Section Heading` | 段落 | 14 pt，加粗 | 左对齐；段前 6 pt、段后 2 pt | `w:smallCaps`、与下段同页、黑色底边框（size `4`、space `1`） | 区块标题 |
 | `Resume Entry Heading` | 段落 | 11 pt，加粗 | 左对齐；段前 2 pt、段后 0 pt | 无 | 条目表格左栏的 `title | position` |
 | `Resume Entry Metadata` | 段落 | 11 pt，加粗 | 右对齐；段前 2 pt、段后 0 pt | 无 | 条目表格右栏的 `location | 日期范围` |
@@ -126,7 +126,7 @@ Word 表格样式不能可靠地保存具体列宽，因此 `ResumeEntryTableSty
 
 ### 链接与项目符号
 
-`Contact.label` 是可见文本，`Contact.href` 为可选目标。非空 `href` 通过 `helpers.add_hyperlink()` 生成外部关系；空或纯空白的 `href` 只写普通文本。邮箱和电话目标由输入 JSON 显式给出，生成器不自动补充 `mailto:` 或 `tel:`。
+`Contact.label` 是可见文本，`Contact.href` 为可选目标。非空 `href` 通过 `helpers.add_hyperlink()` 生成黑色单下划线的外部关系；空或纯空白的 `href` 只写普通文本，不带下划线。邮箱和电话目标由输入 JSON 显式给出，生成器不自动补充 `mailto:` 或 `tel:`。
 
 `Resume Bullet` 使用 11 pt 并连接真实 Word 编号定义，不能用 Unicode 圆点代替。`Resume Sub Bullet` 为已注册的 10.5 pt 样式，但 JSON 不生成嵌套 bullet。
 

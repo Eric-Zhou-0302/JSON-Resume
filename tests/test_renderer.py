@@ -102,6 +102,25 @@ class TestRenderResume(unittest.TestCase):
             {"mailto:xiaoming.wang@example.com", "tel:+8613800000000"},
         )
 
+    def test_hyperlinked_contacts_are_black_and_single_underlined(self) -> None:
+        contact_paragraph = self.document.paragraphs[1]._p
+        hyperlinks = contact_paragraph.findall(".//w:hyperlink", contact_paragraph.nsmap)
+
+        self.assertEqual(len(hyperlinks), 2)
+        for hyperlink in hyperlinks:
+            run_properties = hyperlink.find(".//w:rPr", hyperlink.nsmap)
+            self.assertIsNotNone(run_properties)
+            assert run_properties is not None
+
+            color = run_properties.find("w:color", run_properties.nsmap)
+            underline = run_properties.find("w:u", run_properties.nsmap)
+            self.assertIsNotNone(color)
+            self.assertIsNotNone(underline)
+            assert color is not None
+            assert underline is not None
+            self.assertEqual(color.get(qn("w:val")), "000000")
+            self.assertEqual(underline.get(qn("w:val")), "single")
+
     def test_blank_href_contacts_are_visible_plain_text(self) -> None:
         document = render_resume(
             Name("测试姓名"),
@@ -120,6 +139,8 @@ class TestRenderResume(unittest.TestCase):
                 for relationship in document.part.rels.values()
             )
         )
+        contact_paragraph = document.paragraphs[1]._p
+        self.assertFalse(contact_paragraph.findall(".//w:u", contact_paragraph.nsmap))
 
     def test_empty_fields_and_one_sided_dates_avoid_extra_separators(self) -> None:
         sections = [

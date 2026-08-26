@@ -124,7 +124,9 @@ def add_hyperlink(
     run_color.set(qn("w:val"), color.lstrip("#"))
     run_properties.append(run_color)
     underline = OxmlElement("w:u")
-    underline.set(qn("w:val"), "none")
+    # 直接写入超链接 run，保证 Word 与导出的文档均使用黑色单下划线，
+    # 而不依赖宿主程序对默认 Hyperlink 字符样式的处理。
+    underline.set(qn("w:val"), "single")
     run_properties.append(underline)
     run.append(run_properties)
 
