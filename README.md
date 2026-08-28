@@ -126,8 +126,8 @@ pip install -r requirements.txt
 | `basics` | 必须且只能包含 `name` 与 `contacts`。 |
 | `contacts` | 至少一项。`label` 是显示文字，`href` 是可选链接目标；邮箱/电话需要自行写完整 `mailto:` / `tel:`。 |
 | `sections` | 按 JSON 顺序输出。每个 section 只能有 `title` 和 `entries`。 |
-| `entries` | 仅 `bullets` 必填；`title`、`position`、`location`、`start_date`、`end_date` 可选。 |
-| `bullets` | 仅接受扁平 `list[str]`，不支持嵌套列表、对象或从前缀推断层级。 |
+| `entries` | 每个条目至少包含一项非空的标题、职位、地点、日期或 bullet。 |
+| `bullets` | 可省略；提供时必须是至少包含一条非空字符串的扁平 `list[str]`。不支持嵌套列表、对象或从前缀推断层级。 |
 
 日期必须是有效的 `YYYY-MM`。`end_date` 也可使用 `Present`、`至今` 等状态文本；真实日期范围会显示成 `YYYY.MM - YYYY.MM`。
 

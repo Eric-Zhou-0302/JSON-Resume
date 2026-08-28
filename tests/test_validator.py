@@ -132,7 +132,15 @@ class TestValidateJson(unittest.TestCase):
         ):
             validate_json(data)
 
-    def test_bullets_must_be_a_list_even_when_null(self) -> None:
+    def test_entry_metadata_is_valid_without_bullets(self) -> None:
+        data = load_json(FIXTURES / "valid_resume.json")
+        del data["sections"][0]["entries"][0]["bullets"]
+
+        self.assertIsNone(validate_json(data))
+        _, _, sections = parse_json(data)
+        self.assertEqual(sections[0].entries[0].bullets, [])
+
+    def test_bullets_must_be_a_nonempty_list_of_nonblank_strings(self) -> None:
         data = load_json(FIXTURES / "valid_resume.json")
         data["sections"][0]["entries"][0]["bullets"] = None
 
@@ -140,6 +148,24 @@ class TestValidateJson(unittest.TestCase):
             FieldError,
             r"sections\[0\].entries\[0\].bullets",
         ):
+            validate_json(data)
+
+        for value, expected_path in (([], "bullets"), (["   "], "bullets[0]")):
+            with self.subTest(value=value):
+                data = load_json(FIXTURES / "valid_resume.json")
+                data["sections"][0]["entries"][0]["bullets"] = value
+
+                with self.assertRaisesRegex(
+                    FieldError,
+                    expected_path.replace("[", r"\[").replace("]", r"\]"),
+                ):
+                    validate_json(data)
+
+    def test_entry_requires_metadata_or_bullets(self) -> None:
+        data = load_json(FIXTURES / "valid_resume.json")
+        data["sections"][0]["entries"][0] = {}
+
+        with self.assertRaisesRegex(FieldError, r"sections\[0\].entries\[0\]"):
             validate_json(data)
 
 

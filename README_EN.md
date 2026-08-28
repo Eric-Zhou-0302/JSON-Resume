@@ -125,8 +125,8 @@ Create a JSON file and fill in your resume content according to the JSON contrac
 | `basics` | Must contain exactly `name` and `contacts`. |
 | `contacts` | At least one item. `label` is visible text and `href` is an optional link target; provide complete `mailto:` / `tel:` values yourself. |
 | `sections` | Rendered in JSON order. Each section may contain only `title` and `entries`. |
-| `entries` | Only `bullets` is required; `title`, `position`, `location`, `start_date`, and `end_date` are optional. |
-| `bullets` | A flat `list[str]` only. Nested lists, objects, and hierarchy inferred from prefixes are not supported. |
+| `entries` | Each entry needs at least one nonblank title, position, location, date, or bullet. |
+| `bullets` | Optional; when present, a flat `list[str]` with at least one nonblank string. Nested lists, objects, and hierarchy inferred from prefixes are not supported. |
 
 Dates must be valid `YYYY-MM` values. `end_date` may also use status text such as `Present`; calendar date ranges render as `YYYY.MM - YYYY.MM`.
 

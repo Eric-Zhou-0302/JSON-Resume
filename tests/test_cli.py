@@ -166,6 +166,39 @@ class TestCli(unittest.TestCase):
         self.assertIn("sections[0].entries[0].bullets[1]", result.stderr)
         self.assertNotIn("Traceback", result.stderr)
 
+    def test_entry_metadata_without_bullets_is_accepted(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            data = json.loads(
+                (FIXTURES / "valid_resume.json").read_text(encoding="utf-8")
+            )
+            del data["sections"][0]["entries"][0]["bullets"]
+            input_path = Path(directory) / "metadata-entry.json"
+            output_path = Path(directory) / "metadata-entry.docx"
+            input_path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+
+            result = self._run(str(input_path), "-o", str(output_path))
+
+            self.assertTrue(output_path.is_file())
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stderr, "")
+
+    def test_empty_bullets_is_exit_code_two(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            data = json.loads(
+                (FIXTURES / "valid_resume.json").read_text(encoding="utf-8")
+            )
+            data["sections"][0]["entries"][0]["bullets"] = []
+            input_path = Path(directory) / "empty-bullets.json"
+            input_path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+
+            result = self._run(str(input_path))
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("sections[0].entries[0].bullets", result.stderr)
+        self.assertIn("至少需要一项", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
     def test_day_precision_is_exit_code_two(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             data = json.loads(

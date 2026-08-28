@@ -120,11 +120,15 @@ def _parse_contact(contact: Any, index: int) -> Contact:
 
 
 def _parse_bullets(value: Any, source: str) -> list[str]:
-    """解析项目唯一支持的扁平字符串项目符号数组。"""
+    """解析至少包含一项非空字符串的扁平项目符号数组。"""
     bullets = _require_list(value, source)
+    if not bullets:
+        _error("至少需要一项", source)
     for index, bullet in enumerate(bullets):
         if not isinstance(bullet, str):
             _error("每一项必须为字符串", f"{source}[{index}]")
+        if not bullet.strip():
+            _error("不得为空白字符串", f"{source}[{index}]")
     return list(bullets)
 
 
@@ -132,7 +136,7 @@ def _parse_entry(entry: Any, section_index: int, entry_index: int) -> Entry:
     source = f"sections[{section_index}].entries[{entry_index}]"
     entry = _require_dict(entry, source)
     fields = {"title", "position", "location", "start_date", "end_date", "bullets"}
-    _check_keys(entry, {"bullets"}, fields, source)
+    _check_keys(entry, set(), fields, source)
 
     for field in ("title", "position", "location"):
         value = entry.get(field)
@@ -144,7 +148,27 @@ def _parse_entry(entry: Any, section_index: int, entry_index: int) -> Entry:
     if start_date and isinstance(end_date, date) and end_date < start_date:
         _error("不能早于 start_date", f"{source}.end_date")
 
-    bullets = _parse_bullets(entry["bullets"], f"{source}.bullets")
+    bullets = (
+        _parse_bullets(entry["bullets"], f"{source}.bullets")
+        if "bullets" in entry
+        else []
+    )
+    has_text_metadata = any(
+        value and value.strip()
+        for value in (
+            entry.get("title"),
+            entry.get("position"),
+            entry.get("location"),
+        )
+    )
+    has_date = (
+        start_date is not None
+        or isinstance(end_date, date)
+        or (isinstance(end_date, str) and bool(end_date.strip()))
+    )
+    if not (has_text_metadata or has_date or bullets):
+        _error("至少需要一项非空的元信息或 bullets", source)
+
     return Entry(
         title=entry.get("title"),
         position=entry.get("position"),

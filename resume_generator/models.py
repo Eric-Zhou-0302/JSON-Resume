@@ -1,6 +1,6 @@
 """简历生成器使用的纯数据模型。"""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 
 
@@ -26,7 +26,7 @@ class Contact:
 class Entry:
     """一个教育、经历、项目或技能条目。"""
 
-    bullets: list[str] | None
+    bullets: list[str] = field(default_factory=list)
     title: str | None = None
     position: str | None = None
     location: str | None = None
