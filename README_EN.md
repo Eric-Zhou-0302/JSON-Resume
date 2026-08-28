@@ -124,7 +124,7 @@ Create a JSON file and fill in your resume content according to the JSON contrac
 | `locale` | Required: `zh-CN`, `en-US`, `en-GB`, or `en-EU`. It selects paper size only: `en-US` is Letter; the rest are A4. It does not translate content. |
 | `basics` | Must contain exactly `name` and `contacts`. |
 | `contacts` | At least one item. `label` is visible text and `href` is an optional link target; provide complete `mailto:` / `tel:` values yourself. |
-| `sections` | Rendered in JSON order. Each section may contain only `title` and `entries`. |
+| `sections` | Contains at least one section and renders in JSON order. Each section may contain only `title` and `entries`; `title` must be nonblank and `entries` needs at least one item. |
 | `entries` | Each entry needs at least one nonblank title, position, location, date, or bullet. |
 | `bullets` | Optional; when present, a flat `list[str]` with at least one nonblank string. Nested lists, objects, and hierarchy inferred from prefixes are not supported. |
 

@@ -186,8 +186,12 @@ def _parse_section(section: Any, section_index: int) -> Section:
 
     if not isinstance(section["title"], str):
         _error("必须为字符串", f"{source}.title")
+    if not section["title"].strip():
+        _error("不得为空白字符串", f"{source}.title")
 
     entries = _require_list(section["entries"], f"{source}.entries")
+    if not entries:
+        _error("至少需要一项", f"{source}.entries")
     parsed_entries = [
         _parse_entry(entry, section_index, entry_index)
         for entry_index, entry in enumerate(entries)
@@ -221,6 +225,8 @@ def parse_json(
     ]
 
     sections = _require_list(data["sections"], "sections")
+    if not sections:
+        _error("至少需要一个 section", "sections")
     parsed_sections = [
         _parse_section(section, section_index)
         for section_index, section in enumerate(sections)

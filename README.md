@@ -125,7 +125,7 @@ pip install -r requirements.txt
 | `locale` | 必填：`zh-CN`、`en-US`、`en-GB`、`en-EU`。仅决定纸张：`en-US` 为 Letter，其余为 A4；不会翻译内容。 |
 | `basics` | 必须且只能包含 `name` 与 `contacts`。 |
 | `contacts` | 至少一项。`label` 是显示文字，`href` 是可选链接目标；邮箱/电话需要自行写完整 `mailto:` / `tel:`。 |
-| `sections` | 按 JSON 顺序输出。每个 section 只能有 `title` 和 `entries`。 |
+| `sections` | 至少包含一个 section，按 JSON 顺序输出。每个 section 只能有 `title` 和 `entries`；`title` 必须非空白，`entries` 至少一项。 |
 | `entries` | 每个条目至少包含一项非空的标题、职位、地点、日期或 bullet。 |
 | `bullets` | 可省略；提供时必须是至少包含一条非空字符串的扁平 `list[str]`。不支持嵌套列表、对象或从前缀推断层级。 |
 

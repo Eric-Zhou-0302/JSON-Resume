@@ -168,6 +168,20 @@ class TestValidateJson(unittest.TestCase):
         with self.assertRaisesRegex(FieldError, r"sections\[0\].entries\[0\]"):
             validate_json(data)
 
+    def test_sections_require_visible_titles_and_entries(self) -> None:
+        cases = (
+            ([], "sections"),
+            ([{"title": "   ", "entries": [{"title": "经历"}]}], "title"),
+            ([{"title": "经历", "entries": []}], "entries"),
+        )
+        for sections, expected_path in cases:
+            with self.subTest(sections=sections):
+                data = load_json(FIXTURES / "valid_resume.json")
+                data["sections"] = sections
+
+                with self.assertRaisesRegex(FieldError, expected_path):
+                    validate_json(data)
+
 
 if __name__ == "__main__":
     unittest.main()

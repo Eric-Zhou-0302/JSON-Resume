@@ -190,13 +190,35 @@ class TestCli(unittest.TestCase):
             )
             data["sections"][0]["entries"][0]["bullets"] = []
             input_path = Path(directory) / "empty-bullets.json"
-            input_path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+            input_path.write_text(
+                json.dumps(data, ensure_ascii=False),
+                encoding="utf-8",
+            )
 
             result = self._run(str(input_path))
 
         self.assertEqual(result.returncode, 2)
         self.assertIn("sections[0].entries[0].bullets", result.stderr)
         self.assertIn("至少需要一项", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
+    def test_empty_sections_is_exit_code_two(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            data = json.loads(
+                (FIXTURES / "valid_resume.json").read_text(encoding="utf-8")
+            )
+            data["sections"] = []
+            input_path = Path(directory) / "empty-sections.json"
+            input_path.write_text(
+                json.dumps(data, ensure_ascii=False),
+                encoding="utf-8",
+            )
+
+            result = self._run(str(input_path))
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("sections", result.stderr)
+        self.assertIn("至少需要一个 section", result.stderr)
         self.assertNotIn("Traceback", result.stderr)
 
     def test_day_precision_is_exit_code_two(self) -> None:
