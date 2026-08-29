@@ -129,14 +129,14 @@ Career Source 是个人职业事实的完整素材库，不是一份已经压缩
 - `basics` 必须且只能包含 `name` 与 `contacts`。`name` 必须是字符串；`contacts` 必须是至少一项的数组。
 - 每个 contact 必须且只能包含 `label` 与 `href`。`label` 为字符串，是文档中显示的文字；`href` 为字符串或 `null`。`href` 为 `null`、空字符串或全空白时，显示普通文字而不创建链接；非空 `href` 时，`label` 去除空白后不得为空。
 - 只有来源资料明确确认需要可点击链接时才填写 `href`。邮件和电话必须使用完整 `mailto:`、`tel:` scheme；没有链接依据时令 `href` 为 `null` 或空字符串，不要从文本自行推断链接目标。
-- `sections` 必须是数组，可为空。每个 section 必须且只能包含字符串 `title` 与数组 `entries`；保持 JSON 中的 section 与 entry 顺序。
+- `sections` 必须是至少包含一个 section 的数组。每个 section 必须且只能包含非空白字符串 `title` 与至少包含一个 entry 的数组 `entries`；保持 JSON 中的 section 与 entry 顺序。
 - 不得新增 `Resume`、`Basics`、`Bullet` 或其他包装层，也不得给 section/entry 加 `type`、`kind`、`summary`、`url` 等未定义字段。
 
 ### Section 与 Entry 结构
 
 所有栏目一律使用同一套 `Section → entries → Entry` 结构，`Skills` 也不例外。section 标题应是正常、可读的文字，而不是样式标记、全大写文本或带下划线的标识符；渲染器会把拉丁单词统一为 Title Case，并由 `Resume Section Heading` 的真实 Small Caps 样式呈现，中文字符保持不变。
 
-每个 entry 必须且只能有下列字段；其中仅 `bullets` 必填：
+每个 entry 必须且只能有下列字段，且至少包含一项非空白的标题、职位、地点、日期或 bullet：
 
 | 字段 | 类型与规则 | DOCX 呈现 |
 | --- | --- | --- |
@@ -145,7 +145,7 @@ Career Source 是个人职业事实的完整素材库，不是一份已经压缩
 | `location` | 可选字符串或 `null` | 右栏地点的一部分 |
 | `start_date` | 可选 `YYYY-MM`、空字符串或 `null` | 有值时显示为 `YYYY.MM` |
 | `end_date` | 可选有效 `YYYY-MM`、状态字符串、空字符串或 `null` | 日期显示为 `YYYY.MM`；状态原样显示 |
-| `bullets` | 必填扁平 `list[str]`，不可为 `null`，每项必须是字符串 | 每个非空项为真实 Word 项目符号 |
+| `bullets` | 可省略；提供时必须为非空的扁平 `list[str]`，不可为 `null`，每项必须是非空白字符串 | 每个非空项为真实 Word 项目符号 |
 
 - 所有日历日期必须使用有效的 ISO `YYYY-MM`；无效月份或不符合该格式的日期形状输入都是错误，不能被当作状态字符串。
 - 仅当两端都是日历日期时比较前后顺序，`end_date` 不得早于 `start_date`。有事实依据的 `至今`、`Present` 等非日期状态必须原样保留，不要自动翻译。

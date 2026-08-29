@@ -46,7 +46,7 @@ flowchart LR
 
 顶层只能包含 `locale`、`basics`、`sections`。`locale` 必填，只支持 `zh-CN`、`en-US`、`en-GB`、`en-EU`；`en-US` 映射 Letter，其余映射 A4。不得接受别名、大小写归一化或根据正文语言猜测地区。
 
-每个 `Entry` 只有 `bullets` 必填。`bullets` 是扁平的 `list[str]`；不支持嵌套结构、对象，也不从 `-`、`•` 等文字前缀推断层级。`start_date` 和日期形式的 `end_date` 必须为 ISO `YYYY-MM`；`end_date` 也可为空值或状态文本。解析器内部以当月第一天保存日期，仅用于先后比较和排序。
+每个 `Entry` 的字段均为可选，但必须至少包含一项非空白的标题、职位、地点、日期或 bullet。`bullets` 可省略；提供时必须是至少包含一项非空白字符串的扁平 `list[str]`。不支持嵌套结构、对象，也不从 `-`、`•` 等文字前缀推断层级。顶层 `sections` 必须至少包含一个 section；每个 section 需要非空白标题和至少一个 entry。`start_date` 和日期形式的 `end_date` 必须为 ISO `YYYY-MM`；`end_date` 也可为空值或状态文本。解析器内部以当月第一天保存日期，仅用于先后比较和排序。
 
 校验失败必须使用 `FieldError` 报出完整路径，例如 `sections[0].entries[0].bullets[1]`。校验和解析不能改写调用方传入的原始字典。
 

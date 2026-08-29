@@ -10,7 +10,10 @@ interface Props {
 
 const { showcase } = Astro.props;
 const previewSrc = showcase.image === "zh" ? showcaseZh : showcaseEn;
-const examplesBase = import.meta.env.BASE_URL + "examples/";
+const baseUrl = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const examplesBase = `${baseUrl}examples/`;
 const examplePrefix = showcase.image === "zh" ? "zh" : "en";
 ---
 
