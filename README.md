@@ -116,7 +116,7 @@ https://github.com/Eric-Zhou-0302/JSON-Resume
 
 | 字段 | 规则                                                                                                                       |
 | --- |----------------------------------------------------------------------------------------------------------------------------|
-| `locale` | 必填：`zh-CN`、`en-US`、`en-GB`、`en-EU`。仅决定纸张：`en-US` 为 Letter，其余为 A4；不会翻译内容。                         |
+| `paper_size` | 必填：`A4` 或 `Letter`。仅决定 Word 页面规格；不会翻译内容。                         |
 | `basics` | 必须且只能包含 `name` 与 `contacts`。                                                                                      |
 | `contacts` | 至少一项。`label` 是显示文字，`href` 是可选链接目标；邮箱/电话需要自行写完整 `mailto:` / `tel:`。                          |
 | `sections` | 至少包含一个 section，按 JSON 顺序输出。每个 section 只能有 `title` 和 `entries`；`title` 必须非空白，`entries` 至少一项。 |
@@ -199,7 +199,7 @@ JSON-Resume/
 │   ├── styles.py                      # 页面、样式和表格规范
 │   ├── layout.py                      # 条目双栏版式
 │   ├── helpers.py                     # OOXML、链接和字体工具
-│   ├── config.py                      # locale 与纸张配置
+│   ├── config.py                      # 纸张规格配置
 │   ├── models.py                      # 纯数据模型
 │   ├── output.py                      # 输出目标检查与原子写入
 │   ├── service.py                     # 内存与文件级公共服务接口

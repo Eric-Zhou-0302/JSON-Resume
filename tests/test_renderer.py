@@ -11,7 +11,7 @@ from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml.ns import qn
 from docx.shared import Inches, Mm, Pt
 
-from resume_generator.config import A4_PAPER, LETTER_PAPER, LOCALE_PAPER_SIZE
+from resume_generator.config import A4_PAPER, LETTER_PAPER, SUPPORTED_PAPER_SIZES
 from resume_generator.models import Contact, Entry, Name, Section
 from resume_generator.renderer import render_resume
 from resume_generator.styles import (
@@ -23,7 +23,7 @@ from resume_generator.styles import (
     SUB_BULLET_STYLE,
     ResumeTheme,
 )
-from resume_generator.validator import load_json, parse_json, parse_locale
+from resume_generator.validator import load_json, parse_json, parse_paper_size
 
 FIXTURE = Path(__file__).parent / "fixtures" / "valid_resume.json"
 
@@ -62,7 +62,7 @@ class TestRenderResume(unittest.TestCase):
             name,
             contacts,
             sections,
-            locale=parse_locale(data),
+            paper_size=parse_paper_size(data),
         ).save(cls.output_path)
         cls.document = Document(cls.output_path)
 
@@ -126,7 +126,7 @@ class TestRenderResume(unittest.TestCase):
             Name("测试姓名"),
             (Contact("成都", "   "), Contact("无链接文本", None)),
             (),
-            locale="zh-CN",
+            paper_size="A4",
         )
 
         self.assertEqual(
@@ -159,7 +159,7 @@ class TestRenderResume(unittest.TestCase):
             )
         ]
 
-        document = render_resume(Name("测试姓名"), (), sections, locale="zh-CN")
+        document = render_resume(Name("测试姓名"), (), sections, paper_size="A4")
 
         self.assertEqual(
             _body_blocks(document),
@@ -235,7 +235,7 @@ class TestRenderResume(unittest.TestCase):
                 Section("AI PROJECTS", [Entry(bullets=["Example bullet"])]),
                 Section("CFA RESEARCH", [Entry(bullets=["Example bullet"])]),
             ),
-            locale="en-US",
+            paper_size="Letter",
         )
         uppercase_section_texts = [
             paragraph.text
@@ -300,18 +300,18 @@ class TestRenderResume(unittest.TestCase):
         ):
             self.assertAlmostEqual(margin, Inches(0.5), delta=1000)
 
-    def test_locale_controls_a4_or_letter_page_size(self) -> None:
+    def test_paper_size_controls_a4_or_letter_page_size(self) -> None:
         expected_dimensions = {
             A4_PAPER: (Mm(210), Mm(297)),
             LETTER_PAPER: (Inches(8.5), Inches(11)),
         }
-        for locale, paper_size in LOCALE_PAPER_SIZE.items():
-            with self.subTest(locale=locale, paper_size=paper_size):
+        for paper_size in SUPPORTED_PAPER_SIZES:
+            with self.subTest(paper_size=paper_size):
                 document = render_resume(
                     Name("Example Name"),
                     (),
                     (),
-                    locale=locale,
+                    paper_size=paper_size,
                 )
                 section = document.sections[0]
                 expected_width, expected_height = expected_dimensions[paper_size]

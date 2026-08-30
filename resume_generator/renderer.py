@@ -7,7 +7,6 @@ from datetime import date
 from docx import Document
 from docx.document import Document as DocumentObject
 
-from .config import paper_size_for_locale
 from .helpers import (
     add_hyperlink,
     clear_core_properties,
@@ -32,14 +31,13 @@ def render_resume(
     contacts: Sequence[Contact],
     sections: Sequence[Section],
     *,
-    locale: str,
+    paper_size: str,
 ) -> DocumentObject:
     """从空白 Word 文档构建简历，并注册项目自有样式。"""
     document = Document()
     clear_core_properties(document)
 
     theme = ResumeTheme()
-    paper_size = paper_size_for_locale(locale)
     style_manager = ResumeStyleManager(document, theme, paper_size=paper_size)
     style_manager.apply()
     _render_name(document, name, theme)

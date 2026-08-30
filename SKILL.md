@@ -11,7 +11,7 @@ description: 当用户提出制作、生成、改写、定制或检查简历时�
 
 作为资深简历策略顾问和编辑完成任务，理解招聘者的快速筛选习惯、ATS 关键词匹配、不同地区的简历语言习惯，以及经历取舍对候选人定位的影响。用户只需要提供真实事实，不需要先学会如何写简历，也不需要提供已经润色完成的 bullet。
 
-除非用户明确要求保留原文，否则应把用户提供的旧简历、Career Source、项目记录或零散笔记视为事实素材和初稿，主动完成内容选择、结构组织和专业改写，而不是机械复制。用户没有给出具体写法时，不要反过来要求用户替 Agent 写好简历；应根据目标岗位、locale、职业阶段和现有证据自行作出合理的编辑判断。
+除非用户明确要求保留原文，否则应把用户提供的旧简历、Career Source、项目记录或零散笔记视为事实素材和初稿，主动完成内容选择、结构组织和专业改写，而不是机械复制。用户没有给出具体写法时，不要反过来要求用户替 Agent 写好简历；应根据目标岗位、纸张规格、职业阶段和现有证据自行作出合理的编辑判断。
 
 写作时遵循以下标准：
 
@@ -40,7 +40,7 @@ description: 当用户提出制作、生成、改写、定制或检查简历时�
 只有在用户请求和现有材料尚未明确时，才确认以下信息：
 
 - 目标岗位或岗位描述，仅在需要定制简历时要求；
-- 输出内容语言与严格 locale：zh-CN、en-US、en-GB 或 en-EU；
+- 输出内容语言与纸张规格：`A4` 或 `Letter`；
 - 对所有未直接附加的个人资料文件的明确读取授权。
 
 在询问个人事实前，先完整阅读已经授权的材料。不得要求用户重复说明材料中已经存在的教育、工作、日期、项目或联系方式。只有当关键事实缺失、冲突或含义不明确时才询问，并尽量一次集中提出全部必要问题，不要逐项盘问。
@@ -53,7 +53,7 @@ description: 当用户提出制作、生成、改写、定制或检查简历时�
 - 用户要求优化、岗位定制，或授权其他事实来源补充 JSON 时，切换为专业创作模式并遵守后文的写作与事实规则。
 - 只有在意图完全明确时才修正结构错误。
 - 填补缺失事实、解决事实冲突或改变原意前必须询问用户。
-- 保持严格的顶层 locale、basics 和 sections 结构。
+- 保持严格的顶层 paper_size、basics 和 sections 结构。
 - bullets 必须保持为扁平 list[str]。
 - contacts[].label 是可见文本，contacts[].href 只是可选链接目标。
 
@@ -124,8 +124,8 @@ Career Source 是个人职业事实的完整素材库，不是一份已经压缩
 
 ### JSON 顶层与严格性
 
-- JSON 顶层必须且只能包含 `locale`、`basics`、`sections`；任何未知字段都是错误。
-- `locale` 必须是严格字符串枚举 `zh-CN`、`en-US`、`en-GB` 或 `en-EU`。不得接受大小写变体、别名或仅根据文字语言猜测地区。`zh-CN`、`en-GB`、`en-EU` 输出 A4；`en-US` 输出 Letter。locale 只决定纸张规格，不翻译内容，也不改写状态文本。
+- JSON 顶层必须且只能包含 `paper_size`、`basics`、`sections`；任何未知字段都是错误。
+- `paper_size` 必须是严格字符串枚举 `A4`、`Letter`。不得接受大小写变体或别名。它只决定纸张规格，不翻译内容，也不改写状态文本。
 - `basics` 必须且只能包含 `name` 与 `contacts`。`name` 必须是字符串；`contacts` 必须是至少一项的数组。
 - 每个 contact 必须且只能包含 `label` 与 `href`。`label` 为字符串，是文档中显示的文字；`href` 为字符串或 `null`。`href` 为 `null`、空字符串或全空白时，显示普通文字而不创建链接；非空 `href` 时，`label` 去除空白后不得为空。
 - 只有来源资料明确确认需要可点击链接时才填写 `href`。邮件和电话必须使用完整 `mailto:`、`tel:` scheme；没有链接依据时令 `href` 为 `null` 或空字符串，不要从文本自行推断链接目标。
@@ -156,7 +156,7 @@ Career Source 是个人职业事实的完整素材库，不是一份已经压缩
 
 ~~~json
 {
-  "locale": "en-US",
+  "paper_size": "Letter",
   "basics": {
     "name": "Example Candidate",
     "contacts": [
@@ -195,7 +195,7 @@ Career Source 是个人职业事实的完整素材库，不是一份已经压缩
 
 CLI 负责从空白 Word 文档生成 DOCX。交付前应知道并检查以下可见/结构特征，而不是把 JSON 文件存在视为完成：
 
-- 纵向页面、四边均为 0.5 英寸；纸张严格按 locale 映射。
+- 纵向页面、四边均为 0.5 英寸；纸张严格由 paper_size 指定。
 - 文档具有项目自己的 7 个英文段落样式：`Resume Name`、`Resume Contact Information`、`Resume Section Heading`、`Resume Entry Heading`、`Resume Entry Metadata`、`Resume Bullet`、`Resume Sub Bullet`，以及 `Resume Entry Table` 表格样式。
 - 英文字体为 Times New Roman、中文字体为宋体，字体槽位必须显式覆盖 `w:ascii`、`w:hAnsi`、`w:eastAsia`；姓名居中 24 pt 加粗，联系方式居中 10.5 pt，章节标题 14 pt 加粗并带底边线和 Small Caps，一级 Bullet 为 11 pt；非空 `href` 的联系方式为黑色单下划线。
 - 条目头部使用无边框、固定布局、垂直居中的 60/40 双列表格：左栏为 `title | position`，右栏为 `location | 日期范围`。日期范围在两端都有值时以 ` - ` 连接；不得用空格或制表符伪造对齐。

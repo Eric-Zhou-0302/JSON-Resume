@@ -15,9 +15,9 @@ JSON-Resume 解决的是“结构化、可校验的简历内容如何稳定落�
 ```mermaid
 flowchart LR
     A[JSON] --> B[load_json]
-    B --> C[parse_locale + parse_json]
+    B --> C[parse_paper_size + parse_json]
     C --> D[Name / Contact / Section / Entry]
-    C --> E[locale → paper size]
+    C --> E[paper_size]
     D --> F[render_resume]
     E --> F
     F --> G[DOCX]
@@ -48,11 +48,11 @@ flowchart LR
 - `Section`
 - `FieldError`
 
-不得为顶层 JSON 新增 `Resume`、`Basics`、`Bullet` 等包装模型。`parse_json()` 必须保持返回 `(Name, list[Contact], list[Section])` 三元组；页面配置由独立的 `parse_locale()` 返回，而不是塞进新的聚合模型。
+不得为顶层 JSON 新增 `Resume`、`Basics`、`Bullet` 等包装模型。`parse_json()` 必须保持返回 `(Name, list[Contact], list[Section])` 三元组；页面配置由独立的 `parse_paper_size()` 返回，而不是塞进新的聚合模型。
 
 ### JSON 契约严格且单向
 
-顶层只能包含 `locale`、`basics`、`sections`。`locale` 必填，只支持 `zh-CN`、`en-US`、`en-GB`、`en-EU`；`en-US` 映射 Letter，其余映射 A4。不得接受别名、大小写归一化或根据正文语言猜测地区。
+顶层只能包含 `paper_size`、`basics`、`sections`。`paper_size` 必填，只支持 `A4`、`Letter`。不得接受别名或大小写归一化。
 
 每个 `Entry` 的字段均为可选，但必须至少包含一项非空白的标题、职位、地点、日期或 bullet。`bullets` 可省略；提供时必须是至少包含一项非空白字符串的扁平 `list[str]`。不支持嵌套结构、对象，也不从 `-`、`•` 等文字前缀推断层级。顶层 `sections` 必须至少包含一个 section；每个 section 需要非空白标题和至少一个 entry。`start_date` 和日期形式的 `end_date` 必须为 ISO `YYYY-MM`；`end_date` 也可为空值或状态文本。解析器内部以当月第一天保存日期，仅用于先后比较和排序。
 
@@ -64,7 +64,7 @@ flowchart LR
 
 ### Python 集成接口
 
-`resume_generator.render_json_to_docx(data)` 是面向 HTTP 服务的稳定入口。它接收与 CLI 相同的原始字典，依次调用 `parse_locale()`、`parse_json()` 与 `render_resume()`，再把 `Document` 保存到内存并返回 `bytes`。
+`resume_generator.render_json_to_docx(data)` 是面向 HTTP 服务的稳定入口。它接收与 CLI 相同的原始字典，依次调用 `parse_paper_size()`、`parse_json()` 与 `render_resume()`，再把 `Document` 保存到内存并返回 `bytes`。
 
 `resume_generator.render_json_file_to_docx(input_path, output_path=None, *, pdf=False, force=False)` 是面向 Python 脚本的文件级入口。它读取 JSON 文件、执行同一套严格校验、原子写入 DOCX，并返回生成文件的绝对 `Path`；启用 `pdf=True` 时额外写入同名 PDF。`output_path` 省略时写入当前工作目录的 `output/`。
 
@@ -100,7 +100,7 @@ Python caller
 | `main.py` | 传统根目录入口；委托 `resume_generator.cli.main()`。 | 业务逻辑。 |
 | `cli.py` | 命令行参数、终端进度/错误呈现、退出码，以及生成后的 PDF 页数报告；委托文件级服务接口完成生成。 | JSON 读取、校验、渲染、文件写入和 PDF 导出。 |
 | `validator.py` | UTF-8 JSON 读取、严格字段校验、日期解析、模型转换。 | 页面规格、DOCX 写入、默认值猜测。 |
-| `config.py` | 受支持 locale、纸张名与尺寸映射。 | 简历数据模型和内容翻译。 |
+| `config.py` | 受支持纸张名与尺寸。 | 简历数据模型和内容翻译。 |
 | `models.py` | 纯数据对象和字段路径错误。 | 校验、渲染、文件 I/O。 |
 | `service.py` | 提供内存 DOCX bytes 接口给 HTTP 服务，以及直接生成 DOCX/PDF 文件的 Python 脚本接口。 | HTTP 路由、响应头、CLI 参数解析和终端输出。 |
 | `renderer.py` | 从空白 `Document` 依次写入姓名、联系方式、栏目、条目和 bullet。 | 解释原始 JSON、保存文件、解析 CLI 参数。 |
@@ -161,7 +161,7 @@ Word 表格样式不能可靠地保存具体列宽，因此 `ResumeEntryTableSty
 
 ## CLI、文件与错误语义
 
-`cli.main()` 的稳定顺序是：解析命令行参数 → 通过 `render_json_file_to_docx()` 生成文件 → （`--pdf` 时）读取实际 PDF 页数并报告结果。文件级服务接口的顺序是：读取输入 → 校验 locale/内容并渲染到内存 → 预检 DOCX/PDF 输出目标 → 原子保存 DOCX → 可选导出 PDF。已有 DOCX 或 PDF 不会被覆盖，但会在完成渲染后才报告冲突。
+`cli.main()` 的稳定顺序是：解析命令行参数 → 通过 `render_json_file_to_docx()` 生成文件 → （`--pdf` 时）读取实际 PDF 页数并报告结果。文件级服务接口的顺序是：读取输入 → 校验纸张规格/内容并渲染到内存 → 预检 DOCX/PDF 输出目标 → 原子保存 DOCX → 可选导出 PDF。已有 DOCX 或 PDF 不会被覆盖，但会在完成渲染后才报告冲突。
 
 - 未指定 `-o` 时，输出写入当前工作目录的 `output/`，并与输入同名。
 - 指定 `-o` 时，父目录必须已经存在；默认输出目录会自动创建。
@@ -216,7 +216,7 @@ JSON-Resume/
 ./.venv/bin/python -m unittest discover -v
 ```
 
-当前套件覆盖输入校验、locale/页面映射、样式与字体槽位、真实 Word 编号、超链接、60/40 表格、DOCX 元数据、PDF 页数检测，以及 CLI 的成功/失败路径。
+当前套件覆盖输入校验、纸张规格、样式与字体槽位、真实 Word 编号、超链接、60/40 表格、DOCX 元数据、PDF 页数检测，以及 CLI 的成功/失败路径。
 
 修改以下任一边界后，必须运行完整套件，并按风险补充验收：
 
@@ -224,7 +224,7 @@ JSON-Resume/
 | --- | --- |
 | JSON 契约、模型或校验 | 增加合法/非法 fixture；确认 `FieldError` 路径和 CLI stderr/退出码。 |
 | 渲染、样式、OOXML 或表格 | 检查 DOCX 包结构、样式、编号、链接和元数据；通过 `--pdf` 导出并逐页查看 PDF。 |
-| locale、纸张或 CLI | 验证 A4/Letter、默认与显式输出、覆盖保护、成功与失败路径。 |
+| paper_size、纸张或 CLI | 验证 A4/Letter、默认与显式输出、覆盖保护、成功与失败路径。 |
 | PDF 逻辑 | 验证 Word 导出失败、空 PDF、页数检测及实际有效 PDF。 |
 | Python 公共接口或包元数据 | 验证内存 DOCX、文件 DOCX/PDF 输出、输入不变性、`FieldError`、wheel 构建、隔离安装和 `json-resume` 命令。 |
 

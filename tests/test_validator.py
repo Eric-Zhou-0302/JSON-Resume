@@ -9,7 +9,7 @@ from resume_generator.models import Contact, Entry, FieldError, Name, Section
 from resume_generator.validator import (
     load_json,
     parse_json,
-    parse_locale,
+    parse_paper_size,
     validate_json,
 )
 
@@ -23,29 +23,36 @@ class TestValidateJson(unittest.TestCase):
         data = load_json(FIXTURES / "valid_resume.json")
 
         self.assertIsNone(validate_json(data))
-        self.assertEqual(parse_locale(data), "zh-CN")
+        self.assertEqual(parse_paper_size(data), "A4")
 
-    def test_all_supported_locales_are_valid(self) -> None:
-        for locale in ("zh-CN", "en-US", "en-GB", "en-EU"):
-            with self.subTest(locale=locale):
+    def test_all_supported_paper_sizes_are_valid(self) -> None:
+        for paper_size in ("A4", "Letter"):
+            with self.subTest(paper_size=paper_size):
                 data = load_json(FIXTURES / "valid_resume.json")
-                data["locale"] = locale
+                data["paper_size"] = paper_size
 
                 self.assertIsNone(validate_json(data))
-                self.assertEqual(parse_locale(data), locale)
+                self.assertEqual(parse_paper_size(data), paper_size)
 
-    def test_locale_is_required_and_strict(self) -> None:
+    def test_paper_size_is_required_and_strict(self) -> None:
         data = load_json(FIXTURES / "valid_resume.json")
-        del data["locale"]
-        with self.assertRaisesRegex(FieldError, "root: 缺少字段: locale"):
+        del data["paper_size"]
+        with self.assertRaisesRegex(FieldError, "root: 缺少字段: paper_size"):
             validate_json(data)
 
-        for invalid_locale in ("en", "zh", "en-CA", "EN-US", None):
-            with self.subTest(locale=invalid_locale):
+        for invalid_paper_size in ("a4", "letter", "Legal", "en-US", None):
+            with self.subTest(paper_size=invalid_paper_size):
                 data = load_json(FIXTURES / "valid_resume.json")
-                data["locale"] = invalid_locale
-                with self.assertRaisesRegex(FieldError, "locale"):
+                data["paper_size"] = invalid_paper_size
+                with self.assertRaisesRegex(FieldError, "paper_size"):
                     validate_json(data)
+
+    def test_legacy_locale_field_is_rejected(self) -> None:
+        data = load_json(FIXTURES / "valid_resume.json")
+        data["locale"] = "en-US"
+
+        with self.assertRaisesRegex(FieldError, "root: 存在多余字段: locale"):
+            validate_json(data)
 
     def test_parse_json_uses_only_existing_models(self) -> None:
         name, contacts, sections = parse_json(

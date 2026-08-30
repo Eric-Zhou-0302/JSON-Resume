@@ -7,7 +7,7 @@ from typing import Any
 from .output import prepare_output_target, save_atomically
 from .pdf import convert_docx_to_pdf
 from .renderer import render_resume
-from .validator import load_json, parse_json, parse_locale
+from .validator import load_json, parse_json, parse_paper_size
 
 
 def render_json_to_docx(data: dict[str, Any]) -> bytes:
@@ -15,13 +15,13 @@ def render_json_to_docx(data: dict[str, Any]) -> bytes:
 
     该函数是 CLI 之外的公共集成入口。
     """
-    locale = parse_locale(data)
+    paper_size = parse_paper_size(data)
     name, contacts, sections = parse_json(data)
     document = render_resume(
         name,
         contacts,
         sections,
-        locale=locale,
+        paper_size=paper_size,
     )
 
     output = BytesIO()

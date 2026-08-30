@@ -2,7 +2,7 @@
 
 Generate a polished DOCX resume from strict, structured JSON.
 
-`json-resume` validates your resume data before rendering, applies a stable Word layout with locale-aware paper sizes, and provides both a command-line tool and Python APIs. It is designed for repeatable resume generation in local scripts, automation, and backend services.
+`json-resume` validates your resume data before rendering, applies a stable Word layout with explicit paper sizes, and provides both a command-line tool and Python APIs. It is designed for repeatable resume generation in local scripts, automation, and backend services.
 
 ## Install
 
@@ -57,11 +57,11 @@ Both APIs use the same strict validation and rendering core as the CLI. Validati
 
 ## JSON contract
 
-The top-level JSON object must contain exactly `locale`, `basics`, and `sections`.
+The top-level JSON object must contain exactly `paper_size`, `basics`, and `sections`.
 
 ```json
 {
-  "locale": "en-US",
+  "paper_size": "Letter",
   "basics": {
     "name": "Example Candidate",
     "contacts": [
@@ -91,7 +91,7 @@ The top-level JSON object must contain exactly `locale`, `basics`, and `sections
 }
 ```
 
-Supported locales are `zh-CN`, `en-US`, `en-GB`, and `en-EU`. `en-US` produces Letter paper; the others produce A4. Locale controls paper size only and does not translate content.
+Supported paper sizes are `A4` and `Letter`. `paper_size` controls the Word page size only and does not translate content.
 
 Read the full [JSON contract, examples, and usage guide](https://github.com/Eric-Zhou-0302/JSON-Resume#how-to-use).
 

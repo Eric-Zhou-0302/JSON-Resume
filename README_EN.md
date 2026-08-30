@@ -115,7 +115,7 @@ Create a JSON file and fill in your resume content according to the JSON contrac
 
 | Field | Rule |
 | --- | --- |
-| `locale` | Required: `zh-CN`, `en-US`, `en-GB`, or `en-EU`. It selects paper size only: `en-US` is Letter; the rest are A4. It does not translate content. |
+| `paper_size` | Required: `A4` or `Letter`. It selects the Word page size only and does not translate content. |
 | `basics` | Must contain exactly `name` and `contacts`. |
 | `contacts` | At least one item. `label` is visible text and `href` is an optional link target; provide complete `mailto:` / `tel:` values yourself. |
 | `sections` | Contains at least one section and renders in JSON order. Each section may contain only `title` and `entries`; `title` must be nonblank and `entries` needs at least one item. |
@@ -198,7 +198,7 @@ JSON-Resume/
 │   ├── styles.py                      # Page, style, and table specifications
 │   ├── layout.py                      # Two-column entry layout
 │   ├── helpers.py                     # OOXML, link, and font helpers
-│   ├── config.py                      # Locale and paper configuration
+│   ├── config.py                      # Paper-size configuration
 │   ├── models.py                      # Pure data models
 │   ├── output.py                      # Output-target checks and atomic writes
 │   ├── service.py                     # In-memory and file-level public service APIs

@@ -73,13 +73,13 @@ class TestCli(unittest.TestCase):
             )
             reporter.start()
             reporter.phase("读取  resume.json")
-            reporter.success("已校验  zh-CN · A4 · 4 个栏目")
+            reporter.success("已校验  A4 · 4 个栏目")
 
         rendered = output.getvalue()
         self.assertIn(ANSI_LOGO, rendered)
         self.assertIn("JSON in. Career out.", rendered)
         self.assertIn("读取  resume.json", rendered)
-        self.assertIn("已校验  zh-CN · A4 · 4 个栏目", rendered)
+        self.assertIn("已校验  A4 · 4 个栏目", rendered)
 
     def test_non_interactive_reporter_keeps_path_only_output(self) -> None:
         output = io.StringIO()
@@ -256,13 +256,13 @@ class TestCli(unittest.TestCase):
         self.assertIn("YYYY-MM", result.stderr)
         self.assertNotIn("Traceback", result.stderr)
 
-    def test_missing_locale_is_exit_code_two(self) -> None:
+    def test_missing_paper_size_is_exit_code_two(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             data = json.loads(
                 (FIXTURES / "valid_resume.json").read_text(encoding="utf-8")
             )
-            del data["locale"]
-            input_path = Path(directory) / "missing-locale.json"
+            del data["paper_size"]
+            input_path = Path(directory) / "missing-paper-size.json"
             input_path.write_text(
                 json.dumps(data, ensure_ascii=False),
                 encoding="utf-8",
@@ -271,7 +271,7 @@ class TestCli(unittest.TestCase):
             result = self._run(str(input_path))
 
             self.assertEqual(result.returncode, 2)
-            self.assertIn("root: 缺少字段: locale", result.stderr)
+            self.assertIn("root: 缺少字段: paper_size", result.stderr)
             self.assertNotIn("Traceback", result.stderr)
 
     def test_invalid_output_directory_is_exit_code_one(self) -> None:
@@ -288,9 +288,9 @@ class TestCli(unittest.TestCase):
             self.assertIn("输出目录不存在", result.stderr)
             self.assertNotIn("Traceback", result.stderr)
 
-    def test_en_us_generates_letter_page(self) -> None:
+    def test_letter_paper_size_generates_letter_page(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            output_path = Path(directory) / "resume-en-us.docx"
+            output_path = Path(directory) / "resume-letter.docx"
 
             result = self._run(
                 str(FIXTURES / "valid_resume_en_us.json"),

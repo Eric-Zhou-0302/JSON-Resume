@@ -2,6 +2,12 @@
 
 All notable changes to JSON-Resume are recorded in this file.
 
+## [1.1.2] - 2026-08-30
+
+### Changed
+
+- Replace the locale-based JSON page setting with the explicit `paper_size` field, which accepts only `A4` or `Letter`.
+
 ## [1.1.1] - 2026-08-30
 
 ### Changed
@@ -41,7 +47,7 @@ All notable changes to JSON-Resume are recorded in this file.
 
 ### Added
 
-- Strict JSON-to-DOCX resume generation with locale-based A4 and Letter paper sizes.
+- Strict JSON-to-DOCX resume generation with A4 and Letter paper sizes.
 - Stable DOCX styles, fixed 60/40 entry tables, explicit hyperlink targets, and real Word bullet numbering.
 - Optional PDF export and a standalone PDF page-count command.
 - Chinese and English examples, user documentation, developer architecture documentation, and an Agent Skill.

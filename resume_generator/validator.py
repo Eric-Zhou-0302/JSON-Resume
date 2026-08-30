@@ -6,20 +6,20 @@ from pathlib import Path
 import re
 from typing import Any
 
-from .config import SUPPORTED_LOCALES
+from .config import SUPPORTED_PAPER_SIZES
 from .models import Contact, Entry, FieldError, Name, Section
 
 ISO_MONTH_SHAPE = re.compile(r"^\d{4}-\d{2}$")
 DATE_LIKE_SHAPE = re.compile(r"^\d{4}-\d{1,2}(?:-\d{1,2})?$")
 
 
-def _parse_locale_value(value: Any) -> str:
-    """校验严格的地区枚举，不做大小写或别名归一化。"""
+def _parse_paper_size_value(value: Any) -> str:
+    """校验严格的纸张规格枚举，不做大小写或别名归一化。"""
     if not isinstance(value, str):
-        _error("必须为字符串", "locale")
-    if value not in SUPPORTED_LOCALES:
-        supported = ", ".join(SUPPORTED_LOCALES)
-        _error(f"必须为以下值之一: {supported}", "locale")
+        _error("必须为字符串", "paper_size")
+    if value not in SUPPORTED_PAPER_SIZES:
+        supported = ", ".join(SUPPORTED_PAPER_SIZES)
+        _error(f"必须为以下值之一: {supported}", "paper_size")
     return value
 
 
@@ -207,9 +207,9 @@ def parse_json(
     顶层使用元组返回，避免为 ``Resume`` 或 ``Basics`` 新增包装模型。
     """
     data = _require_dict(data, "root")
-    root_fields = {"locale", "basics", "sections"}
+    root_fields = {"paper_size", "basics", "sections"}
     _check_keys(data, root_fields, root_fields, "root")
-    _parse_locale_value(data["locale"])
+    _parse_paper_size_value(data["paper_size"])
 
     basics = _require_dict(data["basics"], "basics")
     _check_keys(basics, {"name", "contacts"}, {"name", "contacts"}, "basics")
@@ -235,12 +235,12 @@ def parse_json(
     return Name(name=name), parsed_contacts, parsed_sections
 
 
-def parse_locale(data: dict[str, Any]) -> str:
-    """从严格 JSON 契约中读取页面地区配置。"""
+def parse_paper_size(data: dict[str, Any]) -> str:
+    """从严格 JSON 契约中读取页面纸张规格。"""
     data = _require_dict(data, "root")
-    if "locale" not in data:
-        _error("缺少字段: locale", "root")
-    return _parse_locale_value(data["locale"])
+    if "paper_size" not in data:
+        _error("缺少字段: paper_size", "root")
+    return _parse_paper_size_value(data["paper_size"])
 
 
 def validate_json(data: dict[str, Any]) -> None:
