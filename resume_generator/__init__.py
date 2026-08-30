@@ -1,6 +1,6 @@
 """JSON 驱动的 DOCX 简历生成器。"""
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 from .models import Contact, Entry, FieldError, Name, Section
 from .renderer import render_resume

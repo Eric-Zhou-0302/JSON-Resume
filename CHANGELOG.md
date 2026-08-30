@@ -2,6 +2,12 @@
 
 All notable changes to JSON-Resume are recorded in this file.
 
+## [1.1.1] - 2026-08-30
+
+### Changed
+
+- Use a dedicated `PYPI.md` for the PyPI project description instead of the GitHub-focused English README.
+
 ## [1.1.0] - 2026-08-30
 
 ### Added

@@ -14,6 +14,7 @@ from unittest.mock import patch
 from docx import Document
 from docx.shared import Inches
 
+from resume_generator import __version__
 from resume_generator.cli import (
     ANSI_LOGO,
     CliReporter,
@@ -59,7 +60,7 @@ class TestCli(unittest.TestCase):
         result = self._run("--version")
 
         self.assertEqual(result.returncode, 0)
-        self.assertEqual(result.stdout, "json-resume 1.1.0\n")
+        self.assertEqual(result.stdout, f"json-resume {__version__}\n")
         self.assertEqual(result.stderr, "")
 
     def test_interactive_reporter_shows_indigo_logo_and_progress(self) -> None:

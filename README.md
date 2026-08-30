@@ -182,6 +182,7 @@ JSON-Resume/
 ├── SKILL.md                           # 内置 SKILL，面向 Agent 使用
 ├── LICENSE                            # MIT 协议
 ├── MANIFEST.in                        # 源码发行包内容边界
+├── PYPI.md                            # PyPI 项目页说明
 ├── main.py                            # CLI 入口
 ├── pyproject.toml                     # 包元数据、依赖与安装命令入口
 ├── requirements.txt                   # Python 依赖

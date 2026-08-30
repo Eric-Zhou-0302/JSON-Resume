@@ -177,6 +177,7 @@ Word 表格样式不能可靠地保存具体列宽，因此 `ResumeEntryTableSty
 JSON-Resume/
 ├── main.py
 ├── MANIFEST.in
+├── PYPI.md
 ├── pyproject.toml
 ├── resume_generator/
 │   ├── cli.py

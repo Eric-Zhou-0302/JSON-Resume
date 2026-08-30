@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "json-resume"
-version = "1.1.0"
+version = "1.1.1"
 description = "Strict JSON-to-DOCX resume generator with locale-aware Word layout"
-readme = { file = "README_EN.md", content-type = "text/markdown" }
+readme = { file = "PYPI.md", content-type = "text/markdown" }
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE"]

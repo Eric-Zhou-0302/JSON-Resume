@@ -181,6 +181,7 @@ JSON-Resume/
 ├── SKILL.md                           # Built-in Skill for Agents
 ├── LICENSE                            # MIT License
 ├── MANIFEST.in                        # Source-distribution content boundary
+├── PYPI.md                            # PyPI project description
 ├── main.py                            # Traditional CLI entry point
 ├── pyproject.toml                     # Package metadata, dependencies, and installed command
 ├── requirements.txt                   # Python dependencies
