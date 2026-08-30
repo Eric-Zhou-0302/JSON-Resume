@@ -15,6 +15,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white" alt="Python 3.11" />
+  <a href="https://pypi.org/project/json-resume/"><img src="https://img.shields.io/pypi/v/json-resume?label=PyPI&color=3776AB" alt="PyPI version" /></a>
+  <a href="https://pypi.org/project/json-resume/"><img src="https://img.shields.io/pypi/pyversions/json-resume?color=3776AB" alt="Supported Python versions" /></a>
   <img src="https://img.shields.io/badge/output-DOCX%20%2B%20PDF-2B579A" alt="DOCX and PDF output" />
   <a href="SKILL.md"><img src="https://img.shields.io/badge/AI%20Agent-Skill-6E56CF" alt="AI Agent Skill" /></a>
   <a href="https://github.com/Eric-Zhou-0302/Offer-Rain" title="打开 Offer-Rain"><img src="https://img.shields.io/badge/Workflow-JSON--Resume%20%C3%97%20Offer--Rain-6E56CF" alt="JSON-Resume × Offer-Rain 工作流" /></a>
