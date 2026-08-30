@@ -61,11 +61,11 @@
 
 # 如何使用
 
-JSON-Resume 提供两种使用方式：
+JSON-Resume 提供三种使用方式：让 Agent 制作、通过命令行生成，或在 Python 脚本中调用。
 
 ## 面向 Agent 的简历工作流
 
-本项目提供了面向 Agent 使用的 `SKILL.md` 文件，项目本身可作为一个 Skill 供 Codex、OpenClaw、WorkBuddy 等 Agent 调用，让 Agent 为你制作简历。
+项目内置 `SKILL.md`，可供 Codex、OpenClaw、WorkBuddy 等 Agent 使用，用于制作或渲染简历。
 
 - 提供已写好的 JSON，交给 Agent 渲染简历
 - 提供简历内容，交给 Agent 制作简历
@@ -95,39 +95,31 @@ https://github.com/Eric-Zhou-0302/JSON-Resume
 
 项目的 Skill 不只是把文字塞进 Word；它负责从事实材料到最终简历的完整交付，并遵守以下标准：
 
-- **一页完成度**：在专业创作模式下，Agent 会根据目标岗位筛选和精简内容，最终输出恰好一页、信息密度自然的简历；内容过多时优先删除较弱或重复的信息，内容不足时只从已授权的档案补充事实。
+- **一页简历标准**：在专业创作模式下，Agent 会根据目标岗位筛选和精简内容，最终输出恰好一页、信息密度自然的简历；内容过多时优先删除较弱或重复的信息，内容不足时只从已授权的档案补充事实。
 - **完整验收**：Agent 必须通过项目 CLI 生成 DOCX 和 PDF，先检查 PDF 实际页数，再逐页检查裁切、重叠、表格对齐、换行、字符和留白，不能只生成文件就宣称完成。
 - **事实边界**：Agent 只使用你提供或明确授权读取的档案、旧简历和项目材料；不会捏造经历、日期、职位、成绩、指标、技能或联系方式。JD 只能帮助选择和表达，不能成为个人事实的来源。
-- **忠实渲染例外**：如果你直接提供 JSON，Agent 会保留内容和顺序，不擅自删改；此模式可以多页，但会如实报告实际页数和版面情况。
 - **文件保护**：未经明确授权，Agent 不会覆盖既有 JSON、DOCX 或 PDF。
+- **直接提供 JSON 时**：Agent 只负责渲染，会保留内容和顺序，不会改写或删减。
 
-## CLI
-
-### 安装
-
-```bash
-git clone https://github.com/Eric-Zhou-0302/JSON-Resume
-cd JSON-Resume
-pip install -r requirements.txt
-```
+## 命令行与 Python
 
 ### 填写 JSON
 
-创建一份 JSON 文件，根据 JSON 契约 填写简历内容，可参考 `assets/example/example_resume_zh.json`。
+创建一份 JSON 文件，根据 JSON 契约填写简历内容，具体可参考 [示例 JSON 文件](assets/example/example_resume_zh.json)。
 
 <details>
 <summary><strong>展开查看 JSON 契约</strong></summary>
 
 <br />
 
-| 字段 | 规则 |
-| --- | --- |
-| `locale` | 必填：`zh-CN`、`en-US`、`en-GB`、`en-EU`。仅决定纸张：`en-US` 为 Letter，其余为 A4；不会翻译内容。 |
-| `basics` | 必须且只能包含 `name` 与 `contacts`。 |
-| `contacts` | 至少一项。`label` 是显示文字，`href` 是可选链接目标；邮箱/电话需要自行写完整 `mailto:` / `tel:`。 |
+| 字段 | 规则                                                                                                                       |
+| --- |----------------------------------------------------------------------------------------------------------------------------|
+| `locale` | 必填：`zh-CN`、`en-US`、`en-GB`、`en-EU`。仅决定纸张：`en-US` 为 Letter，其余为 A4；不会翻译内容。                         |
+| `basics` | 必须且只能包含 `name` 与 `contacts`。                                                                                      |
+| `contacts` | 至少一项。`label` 是显示文字，`href` 是可选链接目标；邮箱/电话需要自行写完整 `mailto:` / `tel:`。                          |
 | `sections` | 至少包含一个 section，按 JSON 顺序输出。每个 section 只能有 `title` 和 `entries`；`title` 必须非空白，`entries` 至少一项。 |
-| `entries` | 每个条目至少包含一项非空的标题、职位、地点、日期或 bullet。 |
-| `bullets` | 可省略；提供时必须是至少包含一条非空字符串的扁平 `list[str]`。不支持嵌套列表、对象或从前缀推断层级。 |
+| `entries` | 每个条目至少包含一项非空的`title`、`position`、`location`、`start_date` / `end_date` 或 `bullets`。                         |
+| `bullets` | 可省略；提供时必须是至少包含一条非空字符串的扁平 `list[str]`。不支持嵌套列表、对象或从前缀推断层级。                       |
 
 日期必须是有效的 `YYYY-MM`。`end_date` 也可使用 `Present`、`至今` 等状态文本；真实日期范围会显示成 `YYYY.MM - YYYY.MM`。
 
@@ -135,14 +127,48 @@ pip install -r requirements.txt
 
 ### 渲染简历
 
+简历 JSON 可以通过以下三种方式生成 DOCX 或 PDF。
+
+#### 通过已安装的包在命令行生成
+
 ```bash
-python main.py resume.json                    # 渲染 DOCX，默认输出到 ./output/resume.docx
-python main.py resume.json -o OUTPUT.docx     # 指定输出位置与文件名
-python main.py resume.json --pdf              # 生成 PDF
-python main.py resume.json --force            # 覆盖已有文件
-python main.py resume.json --quiet            # 仅输出产物路径，适合脚本调用
-python main.py resume.json --no-banner        # 隐藏交互式终端 Logo
+pip install json-resume
+json-resume resume.json
 ```
+
+#### 脚本内渲染
+
+安装 pip 包后，也可通过导入 `render_json_file_to_docx()` 在 Python 脚本中渲染简历。
+
+```python
+from resume_generator import render_json_file_to_docx
+
+docx_path = render_json_file_to_docx(
+    "resume.json",
+    "resume.docx",
+)
+
+print(docx_path)
+```
+
+#### `main.py` 入口
+
+```bash
+pip install -r requirements.txt
+python main.py resume.json
+```
+
+#### 命令行参数
+
+`json-resume` 与 `python main.py` 都支持以下参数：
+
+```bash
+-o OUTPUT, --output OUTPUT  # 指定输出位置与文件名
+--pdf              # 生成 PDF
+--force            # 覆盖已有文件
+```
+
+Python 接口使用 `output_path`、`pdf=True` 和 `force=True` 传入对应设置。
 
 # 项目结构
 
@@ -153,7 +179,9 @@ JSON-Resume/
 ├── CHANGELOG.md                       # 版本更新记录
 ├── SKILL.md                           # 内置 SKILL，面向 Agent 使用
 ├── LICENSE                            # MIT 协议
+├── MANIFEST.in                        # 源码发行包内容边界
 ├── main.py                            # CLI 入口
+├── pyproject.toml                     # 包元数据、依赖与安装命令入口
 ├── requirements.txt                   # Python 依赖
 ├── assets/
 │   ├── example/                       # 示例 JSON、DOCX、PDF 与预览图
@@ -162,7 +190,7 @@ JSON-Resume/
 ├── docs/
 │   └── ARCHITECTURE.md                # 开发者架构文档
 ├── resume_generator/
-│   ├── cli.py                         # 参数、输出保护和主流程
+│   ├── cli.py                         # 命令行参数与主流程
 │   ├── validator.py                   # JSON 校验与模型解析
 │   ├── renderer.py                    # DOCX 内容渲染
 │   ├── styles.py                      # 页面、样式和表格规范
@@ -170,6 +198,8 @@ JSON-Resume/
 │   ├── helpers.py                     # OOXML、链接和字体工具
 │   ├── config.py                      # locale 与纸张配置
 │   ├── models.py                      # 纯数据模型
+│   ├── output.py                      # 输出目标检查与原子写入
+│   ├── service.py                     # 内存与文件级公共服务接口
 │   └── pdf.py                         # PDF 导出与页数检测
 └── tests/                             # 测试
 ```

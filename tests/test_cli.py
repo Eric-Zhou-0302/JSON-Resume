@@ -17,7 +17,6 @@ from docx.shared import Inches
 from resume_generator.cli import (
     ANSI_LOGO,
     CliReporter,
-    DEFAULT_OUTPUT_DIRECTORY,
     main as cli_main,
 )
 
@@ -52,13 +51,15 @@ class TestCli(unittest.TestCase):
         self.assertIn("--force", result.stdout)
         self.assertIn("--pdf", result.stdout)
         self.assertIn("output", result.stdout)
+        self.assertNotIn("--quiet", result.stdout)
+        self.assertNotIn("--no-banner", result.stdout)
         self.assertEqual(result.stderr, "")
 
     def test_version(self) -> None:
         result = self._run("--version")
 
         self.assertEqual(result.returncode, 0)
-        self.assertEqual(result.stdout, "json-resume 1.0.0\n")
+        self.assertEqual(result.stdout, "json-resume 1.1.0\n")
         self.assertEqual(result.stderr, "")
 
     def test_interactive_reporter_shows_indigo_logo_and_progress(self) -> None:
@@ -66,8 +67,6 @@ class TestCli(unittest.TestCase):
 
         with patch.dict("os.environ", {"TERM": "xterm-256color"}, clear=True):
             reporter = CliReporter(
-                quiet=False,
-                no_banner=False,
                 stdout=output,
                 stderr=io.StringIO(),
             )
@@ -81,13 +80,11 @@ class TestCli(unittest.TestCase):
         self.assertIn("读取  resume.json", rendered)
         self.assertIn("已校验  zh-CN · A4 · 4 个栏目", rendered)
 
-    def test_quiet_reporter_keeps_path_only_output(self) -> None:
-        output = _InteractiveBuffer()
+    def test_non_interactive_reporter_keeps_path_only_output(self) -> None:
+        output = io.StringIO()
         document_path = Path("/tmp/resume.docx")
         pdf_path = Path("/tmp/resume.pdf")
         reporter = CliReporter(
-            quiet=True,
-            no_banner=False,
             stdout=output,
             stderr=io.StringIO(),
         )
@@ -106,10 +103,7 @@ class TestCli(unittest.TestCase):
             shutil.copyfile(FIXTURES / "valid_resume.json", input_path)
 
             with (
-                patch(
-                    "resume_generator.cli.DEFAULT_OUTPUT_DIRECTORY",
-                    output_directory,
-                ),
+                patch("resume_generator.service.Path.cwd", return_value=temporary_root),
                 redirect_stdout(io.StringIO()),
             ):
                 exit_code = cli_main([str(input_path)])
@@ -121,9 +115,7 @@ class TestCli(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             input_path = Path(directory) / f"resume-{Path(directory).name}.json"
             shutil.copyfile(FIXTURES / "valid_resume.json", input_path)
-            output_path = DEFAULT_OUTPUT_DIRECTORY / input_path.with_suffix(
-                ".docx"
-            ).name
+            output_path = PROJECT_ROOT / "output" / input_path.with_suffix(".docx").name
             output_path.unlink(missing_ok=True)
 
             try:
@@ -140,6 +132,29 @@ class TestCli(unittest.TestCase):
                 self.assertEqual(forced.returncode, 0, forced.stderr)
             finally:
                 output_path.unlink(missing_ok=True)
+
+    def test_cli_delegates_file_generation_to_public_api(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            input_path = Path(directory) / "resume.json"
+            output_path = Path(directory) / "resume.docx"
+            shutil.copyfile(FIXTURES / "valid_resume.json", input_path)
+
+            with (
+                patch(
+                    "resume_generator.cli.render_json_file_to_docx",
+                    return_value=output_path.resolve(),
+                ) as render_file,
+                redirect_stdout(io.StringIO()),
+            ):
+                exit_code = cli_main([str(input_path), "-o", str(output_path)])
+
+            self.assertEqual(exit_code, 0)
+            render_file.assert_called_once_with(
+                input_path.resolve(),
+                Path(output_path),
+                pdf=False,
+                force=False,
+            )
 
     def test_missing_input_is_exit_code_two(self) -> None:
         result = self._run("does-not-exist.json")
@@ -294,7 +309,7 @@ class TestCli(unittest.TestCase):
             shutil.copyfile(FIXTURES / "valid_resume.json", input_path)
 
             with (
-                patch("resume_generator.cli.convert_docx_to_pdf") as convert,
+                patch("resume_generator.service.convert_docx_to_pdf") as convert,
                 patch("resume_generator.cli.count_pdf_pages", return_value=1) as count,
                 redirect_stdout(io.StringIO()) as output,
             ):
@@ -344,7 +359,7 @@ class TestCli(unittest.TestCase):
 
             with (
                 patch(
-                    "resume_generator.cli.convert_docx_to_pdf",
+                    "resume_generator.service.convert_docx_to_pdf",
                     side_effect=RuntimeError("Word 不可用"),
                 ),
                 patch("sys.stderr", new_callable=io.StringIO) as error_output,
@@ -367,7 +382,7 @@ class TestCli(unittest.TestCase):
             pdf_path.write_bytes(b"existing PDF")
 
             with (
-                patch("resume_generator.cli.convert_docx_to_pdf") as convert,
+                patch("resume_generator.service.convert_docx_to_pdf") as convert,
                 patch("resume_generator.cli.count_pdf_pages", return_value=1) as count,
                 redirect_stdout(io.StringIO()),
             ):

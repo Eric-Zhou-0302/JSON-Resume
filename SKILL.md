@@ -5,7 +5,7 @@ description: 当用户提出制作、生成、改写、定制或检查简历时�
 
 # 生成 JSON Resume
 
-使用本项目内置的 JSON 校验器、渲染器、样式系统和 CLI，为用户生成事实准确、适合目标岗位并经过完整验收的 DOCX 简历。岗位描述只能作为筛选和表达依据，不能作为用户事实的来源。
+使用已安装的 `json-resume` 包提供的 JSON 校验器、渲染器、样式系统和 CLI，为用户生成事实准确、适合目标岗位并经过完整验收的 DOCX 简历。岗位描述只能作为筛选和表达依据，不能作为用户事实的来源。
 
 ## 承担专业简历写作者职责
 
@@ -202,26 +202,27 @@ CLI 负责从空白 Word 文档生成 DOCX。交付前应知道并检查以下�
 - bullet 使用真正的 Word 编号/项目符号定义，不能用 Unicode 圆点模拟；空白 bullet 不显示。
 - 联系方式按 ` | ` 分隔；非空 `href` 必须变为黑色单下划线的显式外部超链接，空 `href` 不得产生链接关系或下划线。个人元数据必须清空并稳定化，不能遗留生成环境的作者或修改者信息。
 
-## 准备项目环境
+## 安装命令行工具
 
-只使用项目虚拟环境：
+在 `SKILL.md` 所在目录创建隔离环境并安装已发布的包；不要在用户项目目录创建环境，也不要克隆仓库、安装项目源码依赖或运行 `main.py`：
 
 ~~~bash
 python -m venv ./.venv
-./.venv/bin/python -m pip install -r ./requirements.txt
+./.venv/bin/python -m pip install json-resume
 ~~~
 
-只有在 ./.venv/bin/python 不存在时才创建或安装环境。禁止向系统 Python 或全局环境安装依赖。
+只有在 Skill 目录的 `./.venv/bin/python` 不存在时才创建环境。禁止向系统 Python 或全局环境安装依赖。
 
 ## 通过 CLI 生成
 
-运行；最终交付必须带 `--pdf`：
+从任务目录调用 Skill 目录中已安装的 CLI；最终交付必须带 `--pdf`：
 
 ~~~bash
-./.venv/bin/python ./main.py INPUT.json --pdf
+SKILL_DIR="<SKILL.md 所在目录的绝对路径>"
+"$SKILL_DIR/.venv/bin/json-resume" INPUT.json --pdf
 ~~~
 
-- 最终 DOCX 和 PDF 必须通过 CLI 生成，不得绕过项目入口。
+- 最终 DOCX 和 PDF 必须通过已安装包提供的 `json-resume` CLI 生成，不得绕过该入口。
 - 未指定 -o 时，CLI 自动把 DOCX 与 PDF 写入 ./output/，文件名与输入 JSON 相同。
 - 只有用户明确指定输出路径时才使用 -o OUTPUT.docx；现有 -o/--output 已是完整输出接口，不新增其他参数。
 - 未经用户明确授权，不得覆盖已有 JSON、DOCX 或 PDF。

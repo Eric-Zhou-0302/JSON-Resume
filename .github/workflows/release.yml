@@ -1,0 +1,72 @@
+name: Publish Python package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Test and build distributions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install build and test dependencies
+        run: python -m pip install build twine .
+
+      - name: Run tests
+        run: python -m unittest discover -v
+
+      - name: Build source and wheel distributions
+        run: python -m build
+
+      - name: Check distribution metadata
+        run: python -m twine check dist/*
+
+      - name: Verify wheel in an isolated environment
+        run: |
+          python -m venv "$RUNNER_TEMP/json-resume-verify"
+          "$RUNNER_TEMP/json-resume-verify/bin/python" -m pip install dist/*.whl
+          "$RUNNER_TEMP/json-resume-verify/bin/json-resume" tests/fixtures/valid_resume.json -o "$RUNNER_TEMP/resume.docx"
+          test -s "$RUNNER_TEMP/resume.docx"
+
+      - name: Store distributions
+        uses: actions/upload-artifact@v5
+        with:
+          name: python-package-distributions
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/json-resume
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish distributions
+        uses: pypa/gh-action-pypi-publish@release/v1
