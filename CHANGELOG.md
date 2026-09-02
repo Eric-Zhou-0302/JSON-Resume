@@ -2,6 +2,18 @@
 
 All notable changes to JSON-Resume are recorded in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Separate repository releases from Python package versions, so Skill, example, and repository-only documentation updates do not require a package version bump.
+- Replace automatic PyPI publication on pushed `v*` tags with a manually dispatched workflow targeting an existing repository tag.
+- Check matching package versions and reject versions already available on PyPI before publication; stop on lookup failures and show the source tag, commit, package version, and distribution filenames for approval.
+
+### Python package
+
+- No Python package release is planned for these changes; the package version remains `1.1.3`.
+
 ## [1.1.3] - 2026-09-03
 
 ### Changed

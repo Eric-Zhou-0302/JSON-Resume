@@ -1,17 +1,22 @@
 name: Publish Python package
+run-name: Publish Python package from ${{ github.ref_name }}
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: pypi-publish
+  cancel-in-progress: false
 
 jobs:
   build:
     name: Test and build distributions
     runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.release_check.outputs.package_version }}
 
     steps:
       - name: Checkout
@@ -24,6 +29,10 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
+
+      - name: Check release source and package version
+        id: release_check
+        run: python .github/scripts/check_release.py
 
       - name: Install build and test dependencies
         run: python -m pip install build twine .
@@ -38,11 +47,28 @@ jobs:
         run: python -m twine check dist/*
 
       - name: Verify wheel in an isolated environment
+        env:
+          EXPECTED_VERSION: ${{ steps.release_check.outputs.package_version }}
         run: |
           python -m venv "$RUNNER_TEMP/json-resume-verify"
           "$RUNNER_TEMP/json-resume-verify/bin/python" -m pip install dist/*.whl
+          # 忽略当前源码目录，核对真正安装的 wheel 及其运行时版本。
+          "$RUNNER_TEMP/json-resume-verify/bin/python" -I - <<'PY'
+          import os
+          from importlib.metadata import version
+          import resume_generator
+
+          expected = os.environ["EXPECTED_VERSION"]
+          assert version("json-resume") == resume_generator.__version__ == expected
+          PY
           "$RUNNER_TEMP/json-resume-verify/bin/json-resume" tests/fixtures/valid_resume.json -o "$RUNNER_TEMP/resume.docx"
           test -s "$RUNNER_TEMP/resume.docx"
+
+      - name: Summarize verified distributions
+        run: |
+          printf '\n### 待发布文件与 SHA-256\n\n```text\n' >> "$GITHUB_STEP_SUMMARY"
+          sha256sum dist/* >> "$GITHUB_STEP_SUMMARY"
+          printf '```\n' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Store distributions
         uses: actions/upload-artifact@v5
@@ -52,7 +78,7 @@ jobs:
           if-no-files-found: error
 
   publish:
-    name: Publish to PyPI
+    name: Publish json-resume ${{ needs.build.outputs.package_version }} to PyPI
     needs: build
     runs-on: ubuntu-latest
     environment:

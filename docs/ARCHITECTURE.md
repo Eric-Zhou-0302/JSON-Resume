@@ -230,11 +230,28 @@ JSON-Resume/
 
 忠实渲染用户 JSON 时不强制一页，但应报告页数和明显留白。由 Agent 选择或撰写内容时，最终 PDF 必须恰好一页；不能依靠虚构内容或异常压缩版式达成。
 
+## 版本与发布
+
+GitHub Release 的 `v*` 标签代表整个仓库的交付快照；PyPI 的 `json-resume` 版本只代表 Python 包。两套版本独立：`pyproject.toml` 的 `project.version` 必须与 `resume_generator.__version__` 一致，但不要求等于仓库标签。
+
+| 变更范围 | 仓库发布 | Python 包发布 |
+| --- | --- | --- |
+| 仅 Skill、示例或仓库文档 | 按需要创建新的 `v*` 标签和 GitHub Release | 保持包版本，不运行 PyPI 发布工作流。 |
+| 包内代码、依赖、构建配置或 PyPI 包说明 | 按需要创建新的 `v*` 标签和 GitHub Release | 需要交付到 PyPI 时，同步提升两处包版本并手动发起发布。 |
+
+`CHANGELOG.md` 按仓库版本记录变更；每个后续发布条目同时注明是否发布 Python 包及其版本。例如，仅包含 Skill 更新的仓库 `v1.1.4` 可以继续使用 Python 包 `1.1.3`。历史发布记录保持原样。
+
+`.github/workflows/release.yml` 只通过 `workflow_dispatch` 手动启动，使用 `gh workflow run release.yml --ref <已存在的仓库 v* 标签>` 指定发布来源。目标标签必须已推送，并包含支持手动启动的新工作流；新工作流也必须先进入默认分支。工作流只接受标签引用，并检出事件确定的提交，避免构建时切换到浮动分支。推送普通标签或发布 GitHub Release 都不会自动上传 Python 包。
+
+发布继续保留完整测试、源码包与 wheel 构建、`twine check`、隔离安装与 CLI 验证，以及 `pypi` Environment 人工审批和 Trusted Publishing。发布前必须确认两处包版本一致，并检查该版本尚未存在于 PyPI；网络或服务错误不能被当作“版本未发布”。构建摘要列出来源标签、提交号、包版本和制品文件名，供审批时核对。
+
+以上规则仅适用于包含新工作流的提交。旧标签中的工作流和历史运行不会被默认分支上的修改追溯改写；重跑历史运行仍会使用其原有配置，不能用来执行新的发布流程。
+
 ## 维护规则
 
 - README 是用户入口，`SKILL.md` 是 Agent 执行契约，本文是开发者架构说明；三者不能相互取代。
 - 新功能必须沿着输入契约、模型/校验、渲染、CLI、测试和相关文档的完整路径评估，不做只改 UI 或只改 README 的半截实现。
-- `pyproject.toml` 的 distribution 版本必须与 `resume_generator.__version__` 一致；外部服务依赖固定 PyPI 版本，不依赖浮动分支。
+- Python 包版本遵循上文的独立发布规则；外部服务依赖固定 PyPI 版本，不依赖浮动分支。
 - 任何需要新数据字段的需求，先确定是否真的属于当前契约；不以“架构整理”为名做未经确认的模型清理。
 - 不把外部服务、用户个人资料或秘密写入示例、fixture、日志或仓库。
 
