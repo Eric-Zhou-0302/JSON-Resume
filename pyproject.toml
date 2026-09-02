@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "json-resume"
-version = "1.1.2"
+version = "1.1.3"
 description = "Strict JSON-to-DOCX resume generator with explicit Word paper sizes"
 readme = { file = "PYPI.md", content-type = "text/markdown" }
 requires-python = ">=3.11"

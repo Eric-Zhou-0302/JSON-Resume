@@ -2,6 +2,19 @@
 
 All notable changes to JSON-Resume are recorded in this file.
 
+## [1.1.3] - 2026-09-03
+
+### Changed
+
+- Make isolated environment setup, package installation, and CLI verification explicit prerequisites in the Agent Skill, with Python 3.11+ and `json-resume>=1.1.2` requirements.
+- Document Microsoft Word and platform requirements for PDF export, and clarify that the one-page requirement applies to professionally authored resumes.
+- Shorten the Skill description to its resume creation, rewriting, tailoring, and review triggers.
+
+### Fixed
+
+- Use the same Skill environment for installation, resume generation, and PDF page-count checks regardless of the task directory.
+- Remove the `mailto:` prefix from the displayed email in the Chinese example while preserving its hyperlink target; refresh the matching DOCX and PDF examples.
+
 ## [1.1.2] - 2026-08-30
 
 ### Changed
