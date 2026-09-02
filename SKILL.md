@@ -1,11 +1,45 @@
 ---
 name: generate-json-resume
-description: 当用户提出制作、生成、改写、定制或检查简历时使用本 Skill：它把用户提供的 JSON 忠实渲染为 DOCX，或根据经授权的 Career Source、旧简历与目标岗位专业撰写单页定制简历，并完成事实、结构和视觉验收。不用于只提供求职建议而不产出或检查 DOCX 的场景。
+description: 当用户提出制作、生成、改写、定制或检查简历时使用本 Skill
 ---
 
 # 生成 JSON Resume
 
-使用已安装的 `json-resume` 包提供的 JSON 校验器、渲染器、样式系统和 CLI，为用户生成事实准确、适合目标岗位并经过完整验收的 DOCX 简历。岗位描述只能作为筛选和表达依据，不能作为用户事实的来源。
+先完成下方的运行环境准备、`json-resume` 包安装与验证，再使用包提供的 JSON 校验器、渲染器、样式系统和 CLI，为用户生成事实准确、适合目标岗位并经过完整验收的 DOCX 简历。岗位描述只能作为筛选和表达依据，不能作为用户事实的来源。
+
+## 准备运行环境并安装命令行工具
+
+安装本 Skill 不等于安装 `json-resume` Python 包。首次生成简历前，必须完成以下准备；后续任务可复用已经验证可用的环境。
+
+1. 确定 `SKILL.md` 所在目录的绝对路径，以及符合宿主环境约束的 Python 3.11 或更新版本解释器。不要假定当前目录就是 Skill 目录，也不要假定 PATH 中的 `python` 可用。
+2. 在 Skill 目录的 `.venv` 中安装 PyPI 发布的包，不在用户任务目录另建环境，不向系统 Python 或全局环境安装依赖。已有环境必须检查版本与可用性，不能仅凭 `.venv` 目录存在就跳过准备。
+
+以下为 macOS 的 shell 示例；先将两个路径占位符替换为实际绝对路径，再执行。所有步骤均可从任务目录调用，无需切换到 Skill 目录：
+
+~~~bash
+SKILL_DIR="<SKILL.md 所在目录的绝对路径>"
+PYTHON_BIN="<符合宿主环境要求的 Python 3.11+ 解释器绝对路径>"
+
+# 仅在隔离环境的解释器不存在时创建环境。
+if [ ! -e "$SKILL_DIR/.venv/bin/python" ]; then
+    "$PYTHON_BIN" -m venv "$SKILL_DIR/.venv"
+fi
+~~~
+
+使用该环境检查 Python 版本、安装包并验证入口；任一步失败都应先诊断，不能继续生成：
+
+~~~bash
+"$SKILL_DIR/.venv/bin/python" -c "import sys; assert sys.version_info >= (3, 11), '需要 Python 3.11 或更新版本'"
+"$SKILL_DIR/.venv/bin/python" -m pip install "json-resume>=1.1.2"
+"$SKILL_DIR/.venv/bin/python" -m pip check
+"$SKILL_DIR/.venv/bin/json-resume" --version
+"$SKILL_DIR/.venv/bin/json-resume" --help
+~~~
+
+- `paper_size` 契约从 `json-resume` 1.1.2 起提供；较旧版本不能用于本 Skill。上述安装命令会补装缺失或过旧的包，已有满足要求的版本时不主动升级。
+- 安装包会同时安装 `python-docx`、`docx2pdf`、`pypdf` 等 Python 依赖。不要克隆仓库、安装源码的 `requirements.txt` 或改用 `main.py` 来代替包安装。
+- 确认 `--version` 与 `--help` 均成功，且帮助中包含 `--pdf`、`--output`、`--force`。后续生成与页数检测始终使用同一个 Skill 环境；新 shell 中应重新设置 `SKILL_DIR`。
+- 最终必需的 `--pdf` 导出还依赖本机 Microsoft Word 及可用的自动化权限，安装 Python 包不会安装 Word。`docx2pdf` 支持 macOS 与 Windows，不支持 Linux；缺少导出条件时应明确报告环境阻塞，不能把 DOCX 生成成功视为完整交付。Windows 环境应使用 `.venv/Scripts/python.exe` 和 `.venv/Scripts/json-resume.exe`，并采用对应 shell 的路径与变量语法。
 
 ## 承担专业简历写作者职责
 
@@ -202,20 +236,9 @@ CLI 负责从空白 Word 文档生成 DOCX。交付前应知道并检查以下�
 - bullet 使用真正的 Word 编号/项目符号定义，不能用 Unicode 圆点模拟；空白 bullet 不显示。
 - 联系方式按 ` | ` 分隔；非空 `href` 必须变为黑色单下划线的显式外部超链接，空 `href` 不得产生链接关系或下划线。个人元数据必须清空并稳定化，不能遗留生成环境的作者或修改者信息。
 
-## 安装命令行工具
-
-在 `SKILL.md` 所在目录创建隔离环境并安装已发布的包；不要在用户项目目录创建环境，也不要克隆仓库、安装项目源码依赖或运行 `main.py`：
-
-~~~bash
-python -m venv ./.venv
-./.venv/bin/python -m pip install json-resume
-~~~
-
-只有在 Skill 目录的 `./.venv/bin/python` 不存在时才创建环境。禁止向系统 Python 或全局环境安装依赖。
-
 ## 通过 CLI 生成
 
-从任务目录调用 Skill 目录中已安装的 CLI；最终交付必须带 `--pdf`：
+完成安装与验证后，从任务目录调用 Skill 目录中已安装的 CLI；最终交付必须带 `--pdf`：
 
 ~~~bash
 SKILL_DIR="<SKILL.md 所在目录的绝对路径>"
@@ -233,10 +256,11 @@ SKILL_DIR="<SKILL.md 所在目录的绝对路径>"
 
 ## PDF 验收与一页完成度规则
 
-完成 CLI PDF 导出后，必须先运行项目页数检测：
+完成 CLI PDF 导出后，必须先使用同一 Skill 环境运行包提供的页数检测：
 
 ~~~bash
-./.venv/bin/python -m resume_generator.pdf OUTPUT.pdf
+SKILL_DIR="<SKILL.md 所在目录的绝对路径>"
+"$SKILL_DIR/.venv/bin/python" -m resume_generator.pdf OUTPUT.pdf
 ~~~
 
 命令仅输出 PDF 实际页数。页数检测失败、PDF 不存在或专业创作模式的页数不是 `1` 时，不能进入通过状态。忠实渲染模式可以多页，但必须向用户报告实际页数。页数检测完成后，Agent 必须根据自身可用能力打开或预览完整 PDF；不得把 Word 文档作为视觉验收对象。
@@ -250,7 +274,7 @@ PDF 视觉验收至少检查：
 - 中英文字符、项目符号、Small Caps、日期和超链接可见文本；
 - 字号、间距、层级和整页信息密度是否一致、清楚且可读。
 
-无论模式，最终目标都是**恰好一页、内容自然充实且不溢出**：最后一个有内容的页面必须是唯一页面，主要内容应自然延展到页面下部，不能留下明显的大块无意义空白，也不能产生只剩几行内容的第二页。这里的“写满”指信息密度平衡、招聘者易读，不是用冗长句子、虚构内容或异常压缩字号、页边距、行距硬塞页面。
+专业创作模式的最终目标是**恰好一页、内容自然充实且不溢出**：最后一个有内容的页面必须是唯一页面，主要内容应自然延展到页面下部，不能留下明显的大块无意义空白，也不能产生只剩几行内容的第二页。这里的“写满”指信息密度平衡、招聘者易读，不是用冗长句子、虚构内容或异常压缩字号、页边距、行距硬塞页面。
 
 具体处理取决于主要工作模式：
 
