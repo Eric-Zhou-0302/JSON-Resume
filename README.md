@@ -3,6 +3,14 @@
 <p align="center"><strong>准备 JSON，生成你的简历。</strong></p>
 
 <p align="center">
+  <a href="https://jsoncv.cn/" title="打开 JSON CV 在线编辑器">
+    <img src="https://img.shields.io/badge/ONLINE%20STUDIO-jsoncv.cn-6E56CF?style=for-the-badge&logo=googlechrome&logoColor=white" alt="在线体验 JSON CV" />
+  </a>
+</p>
+
+<p align="center"><sub>无需安装 · 在浏览器中编辑、实时预览并导出 Word 简历</sub></p>
+
+<p align="center">
   <sub>✦</sub>
   <strong>支持接入</strong>
   <a href="SKILL.md"><kbd>🤖 AI Agent</kbd></a>
@@ -64,6 +72,8 @@
 # 如何使用
 
 JSON-Resume 提供三种使用方式：让 Agent 制作、通过命令行生成，或在 Python 脚本中调用。
+
+也可以直接前往 [JSON CV 在线体验网站](https://jsoncv.cn/)，在浏览器中编辑、预览并导出 Word 简历。
 
 ## 面向 Agent 的简历工作流
 

@@ -3,6 +3,14 @@
 <p align="center"><strong>Prepare JSON. Generate your resume.</strong></p>
 
 <p align="center">
+  <a href="https://jsoncv.cn/" title="Open the JSON CV online editor">
+    <img src="https://img.shields.io/badge/ONLINE%20STUDIO-jsoncv.cn-6E56CF?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Try JSON CV online" />
+  </a>
+</p>
+
+<p align="center"><sub>No installation · Edit, preview live, and export a Word resume in your browser</sub></p>
+
+<p align="center">
   <sub>✦</sub>
   <strong>Works with</strong>
   <a href="SKILL.md"><kbd>🤖 AI Agent</kbd></a>
