@@ -219,9 +219,17 @@ class ResumeStyleManager:
             alignment=WD_ALIGN_PARAGRAPH.RIGHT,
             space_before=2,
         )
-        bullet_style = self._configure_style(BULLET_STYLE, size=11)
+        bullet_style = self._configure_style(
+            BULLET_STYLE,
+            size=11,
+            alignment=WD_ALIGN_PARAGRAPH.JUSTIFY,
+        )
         set_style_numbering(bullet_style, num_id=1)
-        sub_bullet_style = self._configure_style(SUB_BULLET_STYLE, size=10.5)
+        sub_bullet_style = self._configure_style(
+            SUB_BULLET_STYLE,
+            size=10.5,
+            alignment=WD_ALIGN_PARAGRAPH.JUSTIFY,
+        )
         set_style_numbering(sub_bullet_style, num_id=3)
 
         self.entry_table_style.register()

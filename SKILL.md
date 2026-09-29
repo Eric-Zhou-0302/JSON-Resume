@@ -30,13 +30,13 @@ fi
 
 ~~~bash
 "$SKILL_DIR/.venv/bin/python" -c "import sys; assert sys.version_info >= (3, 11), '需要 Python 3.11 或更新版本'"
-"$SKILL_DIR/.venv/bin/python" -m pip install "json-resume>=1.1.2"
+"$SKILL_DIR/.venv/bin/python" -m pip install "json-resume>=1.1.4"
 "$SKILL_DIR/.venv/bin/python" -m pip check
 "$SKILL_DIR/.venv/bin/json-resume" --version
 "$SKILL_DIR/.venv/bin/json-resume" --help
 ~~~
 
-- `paper_size` 契约从 `json-resume` 1.1.2 起提供；较旧版本不能用于本 Skill。上述安装命令会补装缺失或过旧的包，已有满足要求的版本时不主动升级。
+- `paper_size` 契约从 `json-resume` 1.1.2 起提供，编号段落两端对齐从 1.1.4 起提供；本 Skill 要求 `json-resume>=1.1.4`。上述安装命令会补装缺失或过旧的包，已有满足要求的版本时不主动升级。
 - 安装包会同时安装 `python-docx`、`docx2pdf`、`pypdf` 等 Python 依赖。不要克隆仓库、安装源码的 `requirements.txt` 或改用 `main.py` 来代替包安装。
 - 确认 `--version` 与 `--help` 均成功，且帮助中包含 `--pdf`、`--output`、`--force`。后续生成与页数检测始终使用同一个 Skill 环境；新 shell 中应重新设置 `SKILL_DIR`。
 - 最终必需的 `--pdf` 导出还依赖本机 Microsoft Word 及可用的自动化权限，安装 Python 包不会安装 Word。`docx2pdf` 支持 macOS 与 Windows，不支持 Linux；缺少导出条件时应明确报告环境阻塞，不能把 DOCX 生成成功视为完整交付。Windows 环境应使用 `.venv/Scripts/python.exe` 和 `.venv/Scripts/json-resume.exe`，并采用对应 shell 的路径与变量语法。
@@ -233,7 +233,7 @@ CLI 负责从空白 Word 文档生成 DOCX。交付前应知道并检查以下�
 - 文档具有项目自己的 7 个英文段落样式：`Resume Name`、`Resume Contact Information`、`Resume Section Heading`、`Resume Entry Heading`、`Resume Entry Metadata`、`Resume Bullet`、`Resume Sub Bullet`，以及 `Resume Entry Table` 表格样式。
 - 英文字体为 Times New Roman、中文字体为宋体，字体槽位必须显式覆盖 `w:ascii`、`w:hAnsi`、`w:eastAsia`；姓名居中 24 pt 加粗，联系方式居中 10.5 pt，章节标题 14 pt 加粗并带底边线和 Small Caps，一级 Bullet 为 11 pt；非空 `href` 的联系方式为黑色单下划线。
 - 条目头部使用无边框、固定布局、垂直居中的 60/40 双列表格：左栏为 `title | position`，右栏为 `location | 日期范围`。日期范围在两端都有值时以 ` - ` 连接；不得用空格或制表符伪造对齐。
-- bullet 使用真正的 Word 编号/项目符号定义，不能用 Unicode 圆点模拟；空白 bullet 不显示。
+- `Resume Bullet` 与预留的 `Resume Sub Bullet` 段落均采用两端对齐，并使用真正的 Word 编号/项目符号定义，不能用 Unicode 圆点模拟；空白 bullet 不显示。
 - 联系方式按 ` | ` 分隔；非空 `href` 必须变为黑色单下划线的显式外部超链接，空 `href` 不得产生链接关系或下划线。个人元数据必须清空并稳定化，不能遗留生成环境的作者或修改者信息。
 
 ## 通过 CLI 生成

@@ -139,8 +139,8 @@ Python caller
 | `Resume Section Heading` | 段落 | 14 pt，加粗 | 左对齐；段前 6 pt、段后 2 pt | `w:smallCaps`、与下段同页、黑色底边框（size `4`、space `1`） | 区块标题 |
 | `Resume Entry Heading` | 段落 | 11 pt，加粗 | 左对齐；段前 2 pt、段后 0 pt | 无 | 条目表格左栏的 `title | position` |
 | `Resume Entry Metadata` | 段落 | 11 pt，加粗 | 右对齐；段前 2 pt、段后 0 pt | 无 | 条目表格右栏的 `location | 日期范围` |
-| `Resume Bullet` | 段落 | 11 pt，常规 | 左对齐；段前/段后 0 pt | 真实 Word 编号 `numId=1` | 一级 bullet |
-| `Resume Sub Bullet` | 段落 | 10.5 pt，常规 | 左对齐；段前/段后 0 pt | 真实 Word 编号 `numId=3`；当前不主动输出 | 预留的二级 bullet |
+| `Resume Bullet` | 段落 | 11 pt，常规 | 两端对齐；段前/段后 0 pt | 真实 Word 编号 `numId=1` | 一级 bullet |
+| `Resume Sub Bullet` | 段落 | 10.5 pt，常规 | 两端对齐；段前/段后 0 pt | 真实 Word 编号 `numId=3`；当前不主动输出 | 预留的二级 bullet |
 | `Resume Entry Table` | 表格 | 不直接定义字体；单元格分别使用两种 Entry 段落样式 | 表格水平居中；单元格垂直居中 | 固定布局、无边框、零单元格边距、禁止行跨页拆分；实例列宽固定为左 60% / 右 40% | 条目标题与元信息容器 |
 
 `Resume Entry Table` 的 60/40 列宽不是 Word 表格样式本身能够可靠保存的属性。因此，`ResumeEntryTableStyle.apply()` 在每个表格实例上写入 `tblW`、`tblGrid` 和 `tcW`，使样式定义与实际 OOXML 几何保持一致。
@@ -157,7 +157,7 @@ Word 表格样式不能可靠地保存具体列宽，因此 `ResumeEntryTableSty
 
 `Contact.label` 是可见文本，`Contact.href` 为可选目标。非空 `href` 通过 `helpers.add_hyperlink()` 生成黑色单下划线的外部关系；空或纯空白的 `href` 只写普通文本，不带下划线。邮箱和电话目标由输入 JSON 显式给出，生成器不自动补充 `mailto:` 或 `tel:`。
 
-`Resume Bullet` 使用 11 pt 并连接真实 Word 编号定义，不能用 Unicode 圆点代替。`Resume Sub Bullet` 为已注册的 10.5 pt 样式，但 JSON 不生成嵌套 bullet。
+`Resume Bullet` 使用 11 pt 并连接真实 Word 编号定义，不能用 Unicode 圆点代替。`Resume Sub Bullet` 为已注册的 10.5 pt 样式，但 JSON 不生成嵌套 bullet。两个编号段落样式均使用标准两端对齐（`WD_ALIGN_PARAGRAPH.JUSTIFY`，对应 `w:jc="both"`）。
 
 ## CLI、文件与错误语义
 
@@ -239,7 +239,7 @@ GitHub Release 的 `v*` 标签代表整个仓库的交付快照；PyPI 的 `json
 | 仅 Skill、示例或仓库文档 | 按需要创建新的 `v*` 标签和 GitHub Release | 保持包版本，不运行 PyPI 发布工作流。 |
 | 包内代码、依赖、构建配置或 PyPI 包说明 | 按需要创建新的 `v*` 标签和 GitHub Release | 需要交付到 PyPI 时，同步提升两处包版本并手动发起发布。 |
 
-`CHANGELOG.md` 按仓库版本记录变更；每个后续发布条目同时注明是否发布 Python 包及其版本。例如，仅包含 Skill 更新的仓库 `v1.1.4` 可以继续使用 Python 包 `1.1.3`。历史发布记录保持原样。
+`CHANGELOG.md` 按仓库版本记录变更；每个后续发布条目同时注明是否发布 Python 包及其版本。例如，仅包含 Skill 更新的仓库版本可以继续使用既有 Python 包版本。历史发布记录保持原样。
 
 `.github/workflows/release.yml` 只通过 `workflow_dispatch` 手动启动，使用 `gh workflow run release.yml --ref <已存在的仓库 v* 标签>` 指定发布来源。目标标签必须已推送，并包含支持手动启动的新工作流；新工作流也必须先进入默认分支。工作流只接受标签引用，并检出事件确定的提交，避免构建时切换到浮动分支。推送普通标签或发布 GitHub Release 都不会自动上传 Python 包。
 

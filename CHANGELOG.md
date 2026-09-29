@@ -4,15 +4,20 @@ All notable changes to JSON-Resume are recorded in this file.
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-09-29
+
 ### Changed
 
+- Use justified alignment for the `Resume Bullet` and `Resume Sub Bullet` paragraph styles while preserving their fonts, spacing, and real Word numbering.
+- Require `json-resume>=1.1.4` in the Agent Skill so existing older environments receive the paragraph alignment update.
 - Separate repository releases from Python package versions, so Skill, example, and repository-only documentation updates do not require a package version bump.
 - Replace automatic PyPI publication on pushed `v*` tags with a manually dispatched workflow targeting an existing repository tag.
 - Check matching package versions and reject versions already available on PyPI before publication; stop on lookup failures and show the source tag, commit, package version, and distribution filenames for approval.
+- Add links to the JSON CV online experience in the Chinese and English READMEs.
 
 ### Python package
 
-- No Python package release is planned for these changes; the package version remains `1.1.3`.
+- Release `json-resume==1.1.4`. The JSON contract, public Python APIs, and CLI arguments remain unchanged.
 
 ## [1.1.3] - 2026-09-03
 
